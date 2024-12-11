@@ -1,0 +1,112 @@
+﻿@using Application.DTOs.Request.Management;
+@model CreateProductRequest
+
+@{
+    ViewData["Title"] = "CreateProduct";
+}
+
+<div class="navbar-container">
+</div>
+<div class="main-container">
+    <section class="space-sm">
+        <div class="container">
+            <div class="row mb-5">
+                <!--end of col-->
+            </div>
+            <!--end of row-->
+            <div class="row flex-md-row card card-md">
+                <div class="card-body bg-secondary">
+                    <div class="text-center mb-5">
+                        <h1 class="h2 mb-2">Create your own running club</h1>
+                        <span>Bring together runners in your community</span>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-6 col-lg-5">
+                            <form method="post" asp-action="CreateProduct" enctype="multipart/form-data">
+                                <input type="hidden" id="UserId" name="UserId" asp-for="UserId" />
+                                <div class="form-row form-group">
+                                    <div class="col">
+                                        <input asp-for="ProductName" class="form-control form-control-lg" placeholder="Name" />
+                                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                                    </div>
+                                    @* <div class="col">
+                                    <select asp-for="Size" asp-items="@Html.GetEnumSelectList<Size>()" class="form-control form-control-lg">
+                                    <option>--Select--</option>
+                                    </select>
+                                    <span asp-validation-for="Size" class="text-danger"></span>
+                                    </div> *@
+                                </div>
+                                <div class="form-row form-group">
+                                    <div class="col">
+                                        <input asp-for="ProductPrice" class="form-control form-control-lg" placeholder="Price" />
+                                        <span asp-validation-for="ProductPrice" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-row form-group">
+                                    <div class="col">
+                                        <input asp-for="Description" class="form-control form-control-lg" placeholder="Description" />
+                                        <span asp-validation-for="Description" class="text-danger"></span>
+                                    </div>
+                                </div>
+                               @*  <div class="form-row form-group">
+                                    <div class="col">
+                                        <input asp-for="BrandId" class="form-control form-control-lg" placeholder="Created Year" />
+                                        <span asp-validation-for="BrandId" class="text-danger"></span>
+                                    </div>
+                                </div> *@
+                                @* <div class="form-row form-group">
+                                <div class="col">
+                                <input asp-for="Address.Street" class="form-control form-control-lg" placeholder="Street" />
+                                <span asp-validation-for="Address.Street" class="text-danger"></span>
+                                </div>
+                                </div> *@
+                                @* <div class="form-row form-group">
+                                <div class="col">
+                                <input asp-for="Address.City" class="form-control form-control-lg" placeholder="City" />
+                                <span asp-validation-for="Address.City" class="text-danger"></span>
+                                </div>
+                                <div class="col">
+                                <input asp-for="Address.State" class="form-control form-control-lg" placeholder="State" />
+                                <span asp-validation-for="Address.State" class="text-danger"></span>
+                                </div>
+                                </div> *@
+                                <div class="form-row form-group">
+                                    <div class="col">
+                                        <input asp-for="PicturePaths" type="file" multiple class="form-control form-control-lg" placeholder="Pictures" />
+                                        <span asp-validation-for="PicturePaths" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-row form-group">
+                                    <div class="col">
+                                        <label class="control-label">Category</label>
+                                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
+                                            <option>--Select--</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row form-group">
+                                    <div class="col">
+                                        <label class="control-label">Brand</label>
+                                        <select asp-for="BrandId" class="form-control" asp-items="ViewBag.Brands">
+                                            <option>--Select--</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row form-group">
+                                    <div class="col">
+                                        <button class="btn btn-block btn-success btn-lg" type="submit">Create Account</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end of container-->
+    </section>
+    <!--end of section-->
+</div>

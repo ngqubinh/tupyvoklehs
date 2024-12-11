@@ -1,0 +1,58 @@
+﻿@model List<Application.ViewModels.Order.UnshippedOrderVM>
+
+@{
+    ViewData["Title"] = "Assign Orders to Shippers";
+}
+
+<h2>Assign Orders to Shippers</h2>
+
+<form asp-action="AssignOrders" method="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Order Date</th>
+                <th>Customer Name</th>
+                <th>Total Amount</th>
+                <th>Current Shipper</th>
+                <th>Assign Shipper</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>@Model[i].OrderId</td>
+                    <td>@Model[i].OrderDate.ToString("yyyy-MM-dd")</td>
+                    <td>@Model[i].CustomerName</td>
+                    <td>@Model[i].TotalAmount</td>
+                    <td>@Model[i].CurrentShipperName</td>
+                    <td>
+                        <select asp-for="@Model[i].ShipperId" class="form-control">
+                            <option value="">Select Shipper</option>
+                            @foreach (var shipper in Model[i].AvailableShippers)
+                            {
+                                <option value="@shipper.Id">@shipper.UserName</option>
+                            }
+                        </select>
+                        <input type="hidden" asp-for="@Model[i].OrderId" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Assign Shippers</button>
+</form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.2/signalr.min.js"></script>
+<script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notification")
+            .build();
+
+        connection.on(""ReceiveMessage"", (message) => {
+            alert(`Notification: ${message}`);
+        });
+
+        connection.start().catch(err => console.error(err.toString()));
+</script>

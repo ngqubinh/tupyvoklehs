@@ -1,0 +1,21 @@
+﻿@using Application.ViewModels.User;
+@model EditUserRoleVM
+
+<h2>Edit User Role</h2>
+<form asp-action="EditRole" method="post">
+    <div class="form-group">
+        <label asp-for="CurrentRole" class="control-label">Current Role</label>
+        <input asp-for="CurrentRole" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="NewRole" class="control-label">New Role</label>
+        <select asp-for="NewRole" class="form-control">
+            <option value="@Domain.Constants.StaticUserRole.USER">User</option>
+            <option value="@Domain.Constants.StaticUserRole.STAFF">Staff</option>
+            <option value="@Domain.Constants.StaticUserRole.MANAGER">Manager</option>
+        </select>
+        <span asp-validation-for="NewRole" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="UserId" />
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

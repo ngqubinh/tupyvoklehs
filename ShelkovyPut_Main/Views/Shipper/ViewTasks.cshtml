@@ -1,0 +1,36 @@
+@model List<Application.ViewModels.Order.UnshippedOrderVM>
+
+@{
+    ViewData["Title"] = "Your Tasks";
+}
+
+<h2>Your Tasks</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Order Date</th>
+            <th>Customer Name</th>
+            <th>Total Amount</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model) {
+            <tr>
+                <td>@task.OrderId</td>
+                <td>@task.OrderDate.ToString("yyyy-MM-dd")</td>
+                <td>@task.CustomerName</td>
+                <td>@task.TotalAmount</td>
+                <td>
+                    <a asp-action="TogglePaymentStatus" asp-route-orderId="@task.OrderId" class="btn btn-info">Toggle Payment Status</a>
+                    <form asp-action="MarkAsShipped" method="post">
+                        <input type="hidden" name="orderId" value="@task.OrderId" />
+                        <button type="submit" class="btn btn-success">Mark as Shipped</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

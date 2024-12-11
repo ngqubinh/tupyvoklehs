@@ -1,0 +1,77 @@
+﻿@using Domain.Models.Management
+@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Product";
+}
+
+<h1>Product</h1>
+<p>
+    <a asp-action="CreateProduct">Create New</a>
+    <a asp-action="ProductPageForUser">Products</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pictures)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User!.Email)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td style="cursor: pointer;">
+                    @* <img src="/Images/@item.Pictures" alt="@item.ProductName" width="400" height="200" /> *@
+                    @if (!string.IsNullOrEmpty(@item.Pictures))
+                    {
+                        <h2>Uploaded Images</h2>
+                        <div class="row">
+                            @{
+                                var filePaths = @item.Pictures.Split(',');
+                                // <img src="/uploads/@item.Pictures" alt="@item.ProductName" width="400" height="200" />
+                            }
+                            @foreach (var filePath in filePaths)
+                            {
+                                <div class="col-md-3">
+                                    <img src="@filePath" class="img-thumbnail" />
+                                </div>
+                            }
+                        </div>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User!.Email)
+                </td>
+                <td>
+                    <a asp-action="EditProduct" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="DeleteProduct" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
