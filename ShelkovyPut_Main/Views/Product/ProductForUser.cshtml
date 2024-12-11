@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using Infrastructure.Helppers
+@using Microsoft.AspNetCore.Identity
 @using Domain.Models.Auth;
 @using Application.ViewModels;
 @using System.Security.Claims
@@ -16,7 +17,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="images/favicon.png" rel="shortcut icon">
-    <title>Ludus - Electronics, Apparel, Computers, Books, DVDs & more</title>
+    <title>thegoatboy3.thrift</title>
 
     <!--====== Google Font ======-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet">
@@ -2692,6 +2693,109 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="u-s-m-b-30">
+                                        <div class="shop-w shop-w--style">
+                                            <div class="shop-w__intro-wrap">
+                                                <h1 class="shop-w__h">Brand</h1>
+
+                                                <span class="fas fa-minus collapsed shop-w__toggle" data-target="#s-size" data-toggle="collapse"></span>
+                                            </div>
+                                            <div class="shop-w__wrap collapse" id="s-size">
+                                                <ul class="shop-w__list gl-scroll">
+                                                    <li>
+
+                                                        <!--====== Check Box ======-->
+                                                        <div class="check-box">
+
+                                                            <input type="checkbox" id="xs">
+                                                            <div class="check-box__state check-box__state--primary">
+
+                                                                <label class="check-box__label" for="xs">XS</label>
+                                                            </div>
+                                                        </div>
+                                                        <!--====== End - Check Box ======-->
+
+                                                        <span class="shop-w__total-text">(2)</span>
+                                                    </li>
+                                                    <li>
+
+                                                        <!--====== Check Box ======-->
+                                                        <div class="check-box">
+
+                                                            <input type="checkbox" id="small">
+                                                            <div class="check-box__state check-box__state--primary">
+
+                                                                <label class="check-box__label" for="small">Small</label>
+                                                            </div>
+                                                        </div>
+                                                        <!--====== End - Check Box ======-->
+
+                                                        <span class="shop-w__total-text">(4)</span>
+                                                    </li>
+                                                    <li>
+
+                                                        <!--====== Check Box ======-->
+                                                        <div class="check-box">
+
+                                                            <input type="checkbox" id="medium">
+                                                            <div class="check-box__state check-box__state--primary">
+
+                                                                <label class="check-box__label" for="medium">Medium</label>
+                                                            </div>
+                                                        </div>
+                                                        <!--====== End - Check Box ======-->
+
+                                                        <span class="shop-w__total-text">(6)</span>
+                                                    </li>
+                                                    <li>
+
+                                                        <!--====== Check Box ======-->
+                                                        <div class="check-box">
+
+                                                            <input type="checkbox" id="large">
+                                                            <div class="check-box__state check-box__state--primary">
+
+                                                                <label class="check-box__label" for="large">Large</label>
+                                                            </div>
+                                                        </div>
+                                                        <!--====== End - Check Box ======-->
+
+                                                        <span class="shop-w__total-text">(8)</span>
+                                                    </li>
+                                                    <li>
+
+                                                        <!--====== Check Box ======-->
+                                                        <div class="check-box">
+
+                                                            <input type="checkbox" id="xl">
+                                                            <div class="check-box__state check-box__state--primary">
+
+                                                                <label class="check-box__label" for="xl">XL</label>
+                                                            </div>
+                                                        </div>
+                                                        <!--====== End - Check Box ======-->
+
+                                                        <span class="shop-w__total-text">(10)</span>
+                                                    </li>
+                                                    <li>
+
+                                                        <!--====== Check Box ======-->
+                                                        <div class="check-box">
+
+                                                            <input type="checkbox" id="xxl">
+                                                            <div class="check-box__state check-box__state--primary">
+
+                                                                <label class="check-box__label" for="xxl">XXL</label>
+                                                            </div>
+                                                        </div>
+                                                        <!--====== End - Check Box ======-->
+
+                                                        <span class="shop-w__total-text">(12)</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2724,20 +2828,12 @@
                                             <div class="tool-style__form-wrap">
                                                 <div class="u-s-m-b-8">
                                                     <select class="select-box select-box--transparent-b-2">
-                                                        <option>Show: 8</option>
-                                                        <option selected>Show: 12</option>
-                                                        <option>Show: 16</option>
-                                                        <option>Show: 28</option>
+                                                        <option selected>Hiển thị: 12</option>
                                                     </select>
                                                 </div>
                                                 <div class="u-s-m-b-8">
                                                     <select class="select-box select-box--transparent-b-2">
-                                                        <option selected>Sort By: Newest Items</option>
-                                                        <option>Sort By: Latest Items</option>
-                                                        <option>Sort By: Best Selling</option>
-                                                        <option>Sort By: Best Rating</option>
-                                                        <option>Sort By: Lowest Price</option>
-                                                        <option>Sort By: Highest Price</option>
+                                                        <option selected>Sắp xếp: Mới nhất</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -2791,7 +2887,20 @@
                                                         </div>
                                                         @if (product.Quantity > 0)
                                                         {
-                                                            <div class="product-m__price">@product.ProductPrice vnd (@product?.Quantity)</div>
+                                                            @* <div class="product-m__price">@product.ProductPrice vnd (@product?.Quantity)</div> *@
+                                                            @if (product.DiscountProductprice == null || product.DiscountProductprice == 0)
+                                                            {
+                                                                <span class="product-o__price">
+                                                                    @ConcurrencyFormat.FormatCurrency(product.ProductPrice)
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="product-o__price">
+                                                                    @product.DiscountProductprice VNĐ
+                                                                    <span class="product-l__discount">@product.ProductPrice</span>
+                                                                </span>
+                                                            }
                                                         }
                                                         else
                                                         {

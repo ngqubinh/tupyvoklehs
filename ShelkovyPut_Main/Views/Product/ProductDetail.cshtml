@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using Infrastructure.Helppers
+@using Microsoft.AspNetCore.Identity
 @using Domain.Models.Auth;
 @using Application.ViewModels;
 
@@ -15,7 +16,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="images/favicon.png" rel="shortcut icon">
-    <title>Ludus - Electronics, Apparel, Computers, Books, DVDs & more</title>
+    <title>thegoatboy3.thrift</title>
 
     <!--====== Google Font ======-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet">
@@ -1712,10 +1713,10 @@
                                         <div>
                                             <div class="pd-detail__inline">
 
-                                            <span class="pd-detail__price">@Model.Product.DiscountProductprice VNĐ</span>
+                                            <span class="pd-detail__price">@ConcurrencyFormat.FormatCurrency(Model.Product.DiscountProductprice)</span>
 
-                                                <span class="pd-detail__discount">(Giảm @Model.DiscountedProductPricePercentage%)</span>
-                                            <del class="pd-detail__del">@Model.Product.ProductPrice VNĐ</del>
+                                                <span class="pd-detail__discount">(Giảm @ConcurrencyFormat.FormatCurrency(Model.DiscountedProductPricePercentage)%)</span>
+                                            <del class="pd-detail__del">@ConcurrencyFormat.FormatCurrency(Model.Product.ProductPrice)</del>
                                             </div>
                                         </div>
                                     }
@@ -1723,7 +1724,15 @@
                                     {
                                         <div>
                                             <div class="pd-detail__inline">
-                                                <span class="pd-detail__price">@Model.Product.ProductPrice VNĐ</span>
+                                                @if(Model.Product.DiscountProductprice == 0 || Model.Product.DiscountProductprice == null)
+                                                {
+                                                    <span class="pd-detail__price">@ConcurrencyFormat.FormatCurrency(Model.Product.ProductPrice)</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="pd-detail__price">@ConcurrencyFormat.FormatCurrency(Model.Product.DiscountProductprice)</span>
+                                                }
+                                                
                                             </div>
                                         </div>
                                     }

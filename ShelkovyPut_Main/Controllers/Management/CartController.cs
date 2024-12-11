@@ -1,7 +1,9 @@
-﻿using Application.DTOs.Request.Management;
+﻿using System.IO;
+using Application.DTOs.Request.Management;
 using Application.Interfaces.Management;
 using Application.ViewModels;
 using Domain.Models.Enum;
+using Domain.Models.Management;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +17,15 @@ namespace ShelkovyPut_Main.Controllers.Management
         private readonly ShelkobyPutDbContext _context;
         private readonly ICartService _cart;
         private readonly IVnPayService _vnPay;
+        private readonly IHomeService _home;
 
-        public CartController(ShelkobyPutDbContext context, ICartService cart, IVnPayService vnPay)
+        public CartController(ShelkobyPutDbContext context, ICartService cart, IVnPayService vnPay, IHomeService home)
         {
             _context = context;
             _cart = cart;
             _vnPay = vnPay;
-        }       
+            _home = home;
+        }
 
         public async Task<ActionResult> AddItem(int productId, int qty = 1, int redirect = 0)
         {
@@ -51,9 +55,16 @@ namespace ShelkovyPut_Main.Controllers.Management
             return View(cart);
         }
 
-        public IActionResult CartEmpty()
+        public async Task<IActionResult> CartEmpty(string sTerm = "", int categoryId = 0)
         {
-            return View();
+            IEnumerable<Category> categoriesForSearch = await _home.Categories();
+            var viewModel = new SEOProduct()
+            {
+                CategoryId = categoryId,
+                CategoryForSearch = categoriesForSearch,
+            };
+
+            return viewModel == null ? NotFound() : View(viewModel);
         }
 
         public async Task<IActionResult> GetTotalItemInCart()
