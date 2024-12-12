@@ -1,4 +1,5 @@
 using Application.Interfaces.Management;
+using Application.ViewModels;
 using Domain.Models.Management;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -11,17 +12,31 @@ namespace ShelkovyPut_Main.Controllers.Management
     {
         private readonly IWishlistService _wishlist;
         private readonly ShelkobyPutDbContext _context;
+        private readonly IHomeService _home;
 
-        public WishlistController(IWishlistService wishlist, ShelkobyPutDbContext context)
+        public WishlistController(IWishlistService wishlist, ShelkobyPutDbContext context, IHomeService home)
         {
             _wishlist = wishlist;
             _context = context;
+            _home = home;
         }
 
         public async Task<IActionResult> Wishlists() 
         {
             var wishlists = await _wishlist.GetAllWishListsAsync();
             return View(wishlists);
+        }
+
+        public async Task<IActionResult> WishlistEmpty(string sTerm = "", int categoryId = 0)
+        {
+            IEnumerable<Category> categoriesForSearch = await _home.Categories();
+            var viewModel = new SEOProduct()
+            {
+                CategoryId = categoryId,
+                CategoryForSearch = categoriesForSearch,
+            };
+
+            return viewModel == null ? NotFound() : View(viewModel);
         }
 
         [HttpPost]

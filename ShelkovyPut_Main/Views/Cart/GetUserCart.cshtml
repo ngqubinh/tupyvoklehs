@@ -1,5 +1,6 @@
 ﻿@using System.Linq;
 @using Domain.Models.Management
+@using Infrastructure.Helppers
 @model ShoppingCart
 
 <!DOCTYPE html>
@@ -11,7 +12,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="images/favicon.png" rel="shortcut icon">
-    <title>Ludus - Electronics, Apparel, Computers, Books, DVDs & more</title>
+    <title>thegoatboy3.thrift</title>
 
     <!--====== Google Font ======-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet">
@@ -1659,8 +1660,8 @@
                                     <table class="table-p">
                                         <tbody>
                                             <!--====== Row ======-->
-                                             @if (Model != null && Model.CartDetails != null && Model.CartDetails.Count > 0)
-                                             {
+                                            @if (Model != null && Model.CartDetails != null && Model.CartDetails.Count > 0)
+                                            {
                                                 <tr>
                                                     @foreach (var item in Model.CartDetails)
                                                     {
@@ -1701,8 +1702,11 @@
                                                             </div>
                                                         </td>
                                                         <td>
+                                                            @{
+                                                                double total = item.Product.ProductPrice * item.Quantity;
+                                                            }
 
-                                                            <span class="table-p__price">@(item.Product.ProductPrice * item.Quantity) VNĐ</span>
+                                                            <span class="table-p__price">@ConcurrencyFormat.FormatCurrency(@total)</span>
                                                         </td>
                                                         <td>
                                                             <div class="table-p__input-counter-wrap">
@@ -1734,7 +1738,7 @@
                                                         </td>
                                                     }
                                                 </tr>
-                                             }
+                                            }
                                             <!--====== End - Row ======-->
                                         </tbody>
                                     </table>
@@ -1791,7 +1795,7 @@
                                                             {
                                                                 @foreach (var item in Model.CartDetails)
                                                                 {
-                                                                     <tr>
+                                                                    <tr>
                                                                         <td>Phí giao hàng</td>
                                                                         <td>0</td>
                                                                     </tr>
@@ -1805,24 +1809,36 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Gía tiền</td>
+                                                                        @{
+                                                                            double total = item.Product.ProductPrice * item.Quantity;
+                                                                            double discountTotal = item.Product.DiscountProductprice * item.Quantity;
+                                                                        }
                                                                         @if (item.Product.DiscountProductprice == 0 || item.Product.DiscountProductprice == null)
                                                                         {
-                                                                            <td>@item.Product.ProductPrice VNĐ</td>
+                                                                            @* <td>@item.Product.ProductPrice VNĐ</td> *@
+                                                                            <td>@ConcurrencyFormat.FormatCurrency(total)</td>
                                                                         }
                                                                         else 
                                                                         {
-                                                                            <td>@item.Product.DiscountProductprice VNĐ</td>
+                                                                            <td>@ConcurrencyFormat.FormatCurrency(discountTotal)</td>
                                                                         }
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Tổng tiền</td>
+                                                                        @{
+                                                                            double totalCount = item.Product.ProductPrice * item.Quantity;
+                                                                            double discountTotalCount = item.Product.DiscountProductprice * item.Quantity;
+                                                                        }
                                                                         @if (item.Product.DiscountProductprice == 0 || item.Product.DiscountProductprice == null)
                                                                         {
-                                                                            <td>@(item.Product.ProductPrice * item.Quantity) VNĐ</td>
+                                                                           
+                                                                            @* <td>@(item.Product.ProductPrice * item.Quantity) VNĐ</td> *@
+                                                                            <td>@ConcurrencyFormat.FormatCurrency(total)</td>
                                                                         }
                                                                         else
                                                                         {
-                                                                            <td>@(item.Product.DiscountProductprice * item.Quantity) VNĐ</td>
+                                                                            @* <td>@(item.Product.DiscountProductprice * item.Quantity) VNĐ</td> *@
+                                                                            <td>@ConcurrencyFormat.FormatCurrency(discountTotal)</td>
                                                                         }
                                                                     </tr>
                                                                 }                                                                    

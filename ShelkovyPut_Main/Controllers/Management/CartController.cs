@@ -18,7 +18,6 @@ namespace ShelkovyPut_Main.Controllers.Management
         private readonly ICartService _cart;
         private readonly IVnPayService _vnPay;
         private readonly IHomeService _home;
-
         public CartController(ShelkobyPutDbContext context, ICartService cart, IVnPayService vnPay, IHomeService home)
         {
             _context = context;
@@ -52,6 +51,8 @@ namespace ShelkovyPut_Main.Controllers.Management
             {
                 return RedirectToAction(nameof(CartEmpty));
             }
+
+
             return View(cart);
         }
 
