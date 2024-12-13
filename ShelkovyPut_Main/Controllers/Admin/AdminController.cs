@@ -163,7 +163,7 @@ namespace ShelkovyPut_Main.Controllers.Admin
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return NotFound();
+                return new JsonResult("No user found");
             }
 
             var currentRole = await _userManager.GetRolesAsync(user);
@@ -207,6 +207,32 @@ namespace ShelkovyPut_Main.Controllers.Admin
         public async Task<IActionResult> Reports()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UserDeatils(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) { return new JsonResult("The user with ID is not existed"); }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var viewModel = new ProfileVM()
+            {
+                Id = userId,
+                FullName = user.FullName,
+                Email = user.Email,
+                UserName = user.UserName,
+                PhoneNumber = user.PhoneNumber,
+                CreatedDate = user.CreatedDate,
+                ImageUrl = null,
+                Role = roles.FirstOrDefault(),
+                IsLockedOut = await _userManager.IsLockedOutAsync(user),
+                IsEmailConfirmed = user.EmailConfirmed,
+                IsPhoneNumberConfirmed = user.PhoneNumberConfirmed,
+            };
+
+            return View(viewModel);
         }
     }
 }

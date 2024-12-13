@@ -33,6 +33,29 @@ namespace ShelkovyPut_Main.Controllers.User
             {
                 return Redirect("https://localhost:7235/identity/account/login");
             }
+         
+            var profileVM = new ProfileVM()
+            {
+                Email = user.Email,
+                UserName = user.UserName,
+                FullName = user.FullName,
+                PhoneNumber = user.PhoneNumber,
+                CreatedDate = user.CreatedDate,
+            };
+            return View(profileVM);
+        }
+
+        [HttpGet]
+        [Route("User/Account")]
+        public async Task<IActionResult> Account()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Redirect("https://localhost:7235/identity/account/login");
+            }
+
+            var orders = await _order.UserOrders();
 
             var profileVM = new ProfileVM()
             {
@@ -41,6 +64,7 @@ namespace ShelkovyPut_Main.Controllers.User
                 FullName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 CreatedDate = user.CreatedDate,
+                Orders = orders
             };
             return View(profileVM);
         }
@@ -86,10 +110,20 @@ namespace ShelkovyPut_Main.Controllers.User
                 return NotFound("404 Profile page");
             }
 
+            var profileVM = new ProfileVM()
+            {
+                Email = user.Email,
+                UserName = user.UserName,
+                FullName = user.FullName,
+                PhoneNumber = user.PhoneNumber,
+                CreatedDate = user.CreatedDate,
+            };
+
             var viewModel = new EditProfileVM()
             {
                 FullName = user.FullName,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                Profile = profileVM,
             };
 
             return View(viewModel);

@@ -21,6 +21,7 @@ namespace Application.ViewModels
         public IEnumerable<Product>? ProductsSoldThisWeek { get; set; }
         public IEnumerable<Product>? ProductsSale { get; set; }
         public IEnumerable<Product>? ProductsBrand { get; set; }
+        public IEnumerable<WishList>? wishLists { get; set; }
         public string STerm { get; set; } = "";
         public int CategoryId { get; set; } = 0;
         public int? SizeId { get; set; }

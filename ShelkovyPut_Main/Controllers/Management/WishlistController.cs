@@ -1,3 +1,4 @@
+﻿using System.Security.Claims;
 using Application.Interfaces.Management;
 using Application.ViewModels;
 using Domain.Models.Management;
@@ -21,10 +22,17 @@ namespace ShelkovyPut_Main.Controllers.Management
             _home = home;
         }
 
-        public async Task<IActionResult> Wishlists() 
+        public async Task<IActionResult> Wishlists(string sTerm = "", int categoryId = 0) 
         {
-            var wishlists = await _wishlist.GetAllWishListsAsync();
-            return View(wishlists);
+            IEnumerable<WishList> wishLists = await _wishlist.GetAllWishListsAsync();
+            IEnumerable<Category> categoriesForSearch = await _home.Categories();
+            var viewModel = new SEOProduct()
+            {
+                CategoryId = categoryId,
+                CategoryForSearch = categoriesForSearch,
+                wishLists = wishLists
+            };
+            return viewModel == null ? NotFound() : View(viewModel);
         }
 
         public async Task<IActionResult> WishlistEmpty(string sTerm = "", int categoryId = 0)
@@ -40,37 +48,38 @@ namespace ShelkovyPut_Main.Controllers.Management
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddToWishlist(int productId, string userId) 
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToWishlist(int productId)
         {
-            if(userId == null)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
             {
                 return Unauthorized();
             }
 
             var existingProduct = await _context.WishLists.FirstOrDefaultAsync(w => w.ProductId == productId && w.UserId == userId);
-            if(existingProduct != null)
+            if (existingProduct != null)
             {
-                TempData["Notification"] = "This product is already in your wishlist!";
+                TempData["Notification"] = "Sản phẩm này đã có trong wishlist của bạn!";
                 var refererURL = Request.Headers["Referer"].ToString();
                 return !string.IsNullOrEmpty(refererURL) ? Redirect(refererURL) : RedirectToAction(nameof(Wishlists));
             }
 
-            var wishlistItem = new WishList()
+            var wishlistItem = new WishList
             {
                 ProductId = productId,
-                UserId = userId
+                UserId = userId,
+                CreatedDate = DateTime.Now
             };
 
-           _context.WishLists.Add(wishlistItem);
-           await _context.SaveChangesAsync();
+            _context.WishLists.Add(wishlistItem);
+            await _context.SaveChangesAsync();
 
-           var currentURL = Request.Headers["Referer"].ToString();
-           if(!string.IsNullOrEmpty(currentURL))
-           {
-                return Redirect(currentURL);
-           }
-           return RedirectToAction(nameof(Wishlists));
+            var currentURL = Request.Headers["Referer"].ToString();
+            return !string.IsNullOrEmpty(currentURL) ? Redirect(currentURL) : RedirectToAction(nameof(Wishlists));
         }
+
+
 
         public async Task<IActionResult> Delete(int? id)
         {

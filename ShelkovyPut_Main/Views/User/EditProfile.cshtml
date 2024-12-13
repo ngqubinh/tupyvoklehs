@@ -1,5 +1,11 @@
 ﻿@using Application.ViewModels.User;
 @model EditProfileVM;
+@using Microsoft.AspNetCore.Identity
+@using Domain.Models.Auth;
+@using System.Security.Claims;
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -1619,12 +1625,10 @@
                             <div class="breadcrumb__wrap">
                                 <ul class="breadcrumb__list">
                                     <li class="has-separator">
-
-                                        <a href="index.html">Home</a>
+                                        <a asp-controller="Home" asp-action="Index">Trang chủ</a>
                                     </li>
                                     <li class="is-marked">
-
-                                        <a href="dash-edit-profile.html">My Account</a>
+                                        <a>Chỉnh sửa thông tin</a>
                                     </li>
                                 </ul>
                             </div>
@@ -1647,72 +1651,39 @@
                                     <div class="dash__box dash__box--bg-white dash__box--shadow u-s-m-b-30">
                                         <div class="dash__pad-1">
 
-                                            <span class="dash__text u-s-m-b-16">Hello, John Doe</span>
+                                            <span class="dash__text u-s-m-b-16">
+                                                Hello, @(string.IsNullOrEmpty(Model.Profile?.FullName) ? Model.Profile?.Email : Model.Profile?.FullName)
+                                            </span>
                                             <ul class="dash__f-list">
                                                 <li>
 
-                                                    <a class="dash-active" href="dashboard.html">Manage My Account</a>
+                                                    <a asp-controller="User" asp-action="Account">Tài khoản</a>
                                                 </li>
                                                 <li>
-
-                                                    <a href="dash-my-profile.html">My Profile</a>
+                                                    <a asp-controller="User" asp-action="Dashboard">Thông tin cá nhân</a>
                                                 </li>
                                                 <li>
+                                                    <a asp-controller="User" asp-action="EditProfile" class="dash-active">Chỉ sửa thông tin</a>
+                                                </li>
+                                                @*  <li>
 
                                                     <a href="dash-address-book.html">Address Book</a>
+                                                </li> *@
+                                                <li>
+
+                                                    <a href="dash-track-order.html">Tra cứu đơn hàng</a>
+                                                </li>
+                                                <li>
+                                                    <a asp-controller="User" asp-action="UserOrders">Đơn hàng</a>
                                                 </li>
                                                 <li>
 
-                                                    <a href="dash-track-order.html">Track Order</a>
+                                                    <a href="dash-payment-option.html">Phương thức thanh toán</a>
                                                 </li>
-                                                <li>
-
-                                                    <a href="dash-my-order.html">My Orders</a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="dash-payment-option.html">My Payment Options</a>
-                                                </li>
-                                                <li>
+                                                @*  <li>
 
                                                     <a href="dash-cancellation.html">My Returns & Cancellations</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="dash__box dash__box--bg-white dash__box--shadow dash__box--w">
-                                        <div class="dash__pad-1">
-                                            <ul class="dash__w-list">
-                                                <li>
-                                                    <div class="dash__w-wrap">
-
-                                                        <span class="dash__w-icon dash__w-icon-style-1"><i class="fas fa-cart-arrow-down"></i></span>
-
-                                                        <span class="dash__w-text">4</span>
-
-                                                        <span class="dash__w-name">Orders Placed</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="dash__w-wrap">
-
-                                                        <span class="dash__w-icon dash__w-icon-style-2"><i class="fas fa-times"></i></span>
-
-                                                        <span class="dash__w-text">0</span>
-
-                                                        <span class="dash__w-name">Cancel Orders</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="dash__w-wrap">
-
-                                                        <span class="dash__w-icon dash__w-icon-style-3"><i class="far fa-heart"></i></span>
-
-                                                        <span class="dash__w-text">0</span>
-
-                                                        <span class="dash__w-name">Wishlist</span>
-                                                    </div>
-                                                </li>
+                                                </li> *@
                                             </ul>
                                         </div>
                                     </div>
@@ -1723,7 +1694,7 @@
                                         <div class="dash__pad-2">
                                             <h1 class="dash__h1 u-s-m-b-14">Chỉnh Sửa Thông Tin</h1>
 
-                                            <span class="dash__text u-s-m-b-30">Looks like you haven't update your profile</span>
+                                            <span class="dash__text u-s-m-b-30">Lưu ý về thông tin bạn cần cập nhật</span>
                                             @* <div class="dash__link dash__link--secondary u-s-m-b-30">
                                                 <a data-modal="modal" data-modal-id="#dash-newsletter">Subscribe Newsletter</a>
                                             </div> *@
@@ -1737,7 +1708,7 @@
                                                             </div>
                                                             <div class="u-s-m-b-30">
                                                                 <label class="gl-label" for="reg-lname">Số điện thoại *</label>
-                                                                <input asp-for="PhoneNumber" class="input-text input-text--primary-style" type="text" id="reg-lname" placeholder="Doe">
+                                                                <input asp-for="PhoneNumber" class="input-text input-text--primary-style" type="text" id="reg-lname" placeholder="+84">
                                                             </div>
                                                         </div>
                                                         @* <div class="gl-inline">

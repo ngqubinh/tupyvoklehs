@@ -2915,11 +2915,12 @@
 
                                                             <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" id="wishlistForm">
                                                                 <input type="hidden" name="productId" value="@product.Id" />
-                                                                <input type="hidden" name="userId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+                                                                @Html.AntiForgeryToken()
                                                                 <div class="product-m__wishlist">
                                                                     <a class="far fa-heart" data-modal="modal" data-modal-id="#add-to-cart" onclick="document.getElementById('wishlistForm').submit();" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"></a>
                                                                 </div>
                                                             </form>
+
 
 
                                                         </div>
