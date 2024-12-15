@@ -26,7 +26,6 @@ namespace Infrastructure.Repositories.Management
             _http = http;
             _userManager = userManager;
         }
-
         public async Task ChangeOrderStatus(UpdateOrderStatusVM model)
         {
             var order = await _context.Orders.FindAsync(model.OrderId);
@@ -37,17 +36,14 @@ namespace Infrastructure.Repositories.Management
             order.OrderStatusId = model.OrderStatusId;
             await _context.SaveChangesAsync();
         }
-
         public async Task<Order> GetOrderById(int id)
         {
             return await _context.Orders.FindAsync(id);
         }
-
         public async Task<IEnumerable<OrderStatus>> GetOrderStatuses()
         {
             return await _context.OrderStatus.ToListAsync();
         }
-
         public async Task TogglePaymentStatus(int orderID)
         {
             var order = await _context.Orders.FindAsync(orderID);
@@ -58,7 +54,6 @@ namespace Infrastructure.Repositories.Management
             order.IsPaid = !order.IsPaid;
             await _context.SaveChangesAsync();
         }
-
         public async Task<IEnumerable<Order>> AdminOrders(bool getAll = false)
         {
             var orders = _context.Orders.Include(o => o.OrderStatus)
@@ -78,7 +73,7 @@ namespace Infrastructure.Repositories.Management
 
             return await orders.ToListAsync();
         }
-        public async Task<IEnumerable<MyOrderVM>> UserOrders(bool getAll = false)
+        public async Task<ProfileVM> UserOrders(bool getAll = false)
         {
             var userId = GetUserId();
             if (string.IsNullOrEmpty(userId))
@@ -98,26 +93,41 @@ namespace Infrastructure.Repositories.Management
             }
 
             var orders = await ordersQuery.ToListAsync();
+            var user = orders.FirstOrDefault()?.User;
 
-            var result = orders.Select(order => new MyOrderVM
+            var profileVM = new ProfileVM()
             {
-                OrderId = order.Id,
-                CreatedDate = order.CreatedDate,
-                OrderStatus = order.OrderStatus,
-                OrderDetails = order.OrderDetails.Select(od => new OrderDetailVM
+                Id = user?.Id,
+                Email = user?.Email,
+                UserName = user?.UserName,
+                FullName = user?.FullName,
+                PhoneNumber = user?.PhoneNumber,
+                ImageUrl = user?.Image,
+                CreatedDate = user?.CreatedDate,
+                //Role = user?.Role,
+                //IsLockedOut = user?.IsLockedOut ?? false,
+                IsEmailConfirmed = user?.EmailConfirmed ?? false,
+                IsPhoneNumberConfirmed = user?.PhoneNumberConfirmed ?? false,
+                Orders = orders.Select(order => new MyOrderVM
                 {
-                    ProductId = od.ProductId,
-                    ProductName = od.Product?.ProductName,
-                    Pictures = od.Product?.Pictures,
-                    Quantity = od.Quantity,
-                    TotalPrice = od.Product?.ProductPrice * od.Quantity ?? 0,
-                }).ToList(),
-                TotalOrderPrice = order.OrderDetails.Sum(od => od.Product?.ProductPrice * od.Quantity ?? 0),
-                FullName = order.User.FullName,
-                Email = order.User.Email
-            }).ToList();
+                    OrderId = order.Id,
+                    CreatedDate = order.CreatedDate,
+                    OrderStatus = order.OrderStatus,
+                    OrderDetails = order.OrderDetails.Select(od => new OrderDetailVM
+                    {
+                        ProductId = od.ProductId,
+                        ProductName = od.Product?.ProductName,
+                        Pictures = od.Product?.Pictures,
+                        Quantity = od.Quantity,
+                        TotalPrice = od.Product?.ProductPrice * od.Quantity ?? 0,
+                    }).ToList(),
+                    TotalOrderPrice = order.OrderDetails.Sum(od => od.Product?.ProductPrice * od.Quantity ?? 0),
+                    FullName = order.User.FullName,
+                    Email = order.User.Email
+                }).ToList()
+            };
 
-            return result;
+            return profileVM;
         }
         public async Task<IEnumerable<MyOrderVM>> GetOrdersByFilter(string userId, string filter)
         {
@@ -164,24 +174,35 @@ namespace Infrastructure.Repositories.Management
 
             return orderVM;
         }
-
-        public async Task<UserOrderDetailVM> GetOrderDetails(int orderId)
+        public async Task<ProfileVM> GetOrderDetails(int orderId)
         {
+            var order = await _context.Orders
+                .Include(o => o.OrderDetails).ThenInclude(od => od.Product)
+                .Include(o => o.OrderStatus)
+                .Include(o => o.User)
+                .Include(o => o.Addresses)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
             {
-                var order = await _context.Orders
-                    .Where(o => o.Id == orderId)
-                    .Include(o => o.OrderDetails).ThenInclude(od => od.Product)
-                    .Include(o => o.OrderStatus)
-                    .Include(o => o.User)
-                    .Include(o => o.Addresses)
-                    .FirstOrDefaultAsync();
+                return null;
+            }
 
-                if (order == null)
-                {
-                    return null;
-                }
-
-                var viewModel = new UserOrderDetailVM
+            var profileVM = new ProfileVM
+            {
+                Id = order.User?.Id,
+                Email = order.User?.Email,
+                UserName = order.User?.UserName,
+                FullName = order.User?.FullName,
+                PhoneNumber = order.User?.PhoneNumber,
+                ImageUrl = order.User?.Image,
+                CreatedDate = order.User?.CreatedDate,
+                //Role = order.User?.Role,
+                //IsLockedOut = order.User?.IsLockedOut ?? false,
+                IsEmailConfirmed = order.User?.EmailConfirmed ?? false,
+                IsPhoneNumberConfirmed = order.User?.PhoneNumberConfirmed ?? false,
+                Orders = new List<MyOrderVM>(), // Can be empty if focusing only on order details
+                OrderDetail = new UserOrderDetailVM
                 {
                     OrderId = order.Id,
                     CreatedDate = order.CreatedDate,
@@ -202,12 +223,11 @@ namespace Infrastructure.Repositories.Management
                         TotalPrice = od.Product?.ProductPrice * od.Quantity ?? 0,
                         Pictures = od.Product?.Pictures
                     }).ToList()
-                };
+                }
+            };
 
-                return viewModel;
-            }
+            return profileVM;
         }
-
         public async Task<List<UnPaidOrderVM>> GetUnPaidOrders()
         {
             var unpaidOrders = await _context.Orders
@@ -225,7 +245,6 @@ namespace Infrastructure.Repositories.Management
 
             return unpaidOrders;
         }
-
         public async Task<List<UnshippedOrderVM>> GetUnshippedOrdersAsync() 
         {
             var unshippedOrders = await _context.Orders
@@ -236,7 +255,7 @@ namespace Infrastructure.Repositories.Management
                 .Select(o => new UnshippedOrderVM {
                     OrderId = o.Id,
                     OrderDate = o.CreatedDate,
-                    CustomerName = o.User.UserName,
+                    CustomerName = o.User.FullName,
                     TotalAmount = o.OrderDetails.Sum(od => od.Quantity * od.Product.ProductPrice),
                     IsSelectedForShipping = false,
                     CurrentShipperName = o.Shipper != null ? o.Shipper.User.Email : "Not Assigned",
@@ -245,7 +264,6 @@ namespace Infrastructure.Repositories.Management
 
             return unshippedOrders;
         }
-
         public async Task AssignShipperToOrdersAsync(List<UnshippedOrderVM> model)
         {
             try 
@@ -289,7 +307,6 @@ namespace Infrastructure.Repositories.Management
                 await hubContext.Clients.All.SendAsync("ReceiveMessage", $"An error occurred: {ex.Message}");
             }
         }   
-
         public async Task<List<UnshippedOrderVM>> GetShipperTaskAsync(string shipperId)
         {
             var tasks = await _context.Orders
@@ -305,7 +322,6 @@ namespace Infrastructure.Repositories.Management
 
             return tasks;
         }    
-
         public async Task MarkOrderAsShippedAsync(int orderId) {
             var order = await _context.Orders.FindAsync(orderId);
             if (order != null) {
@@ -314,8 +330,6 @@ namespace Infrastructure.Repositories.Management
                 await _context.SaveChangesAsync();
             }
         }
-
-
         private async Task<int> GetOrCreateShipperId(string userId, int orderId)
         {
             var shipper = await _context.Shippers.FirstOrDefaultAsync(s => s.UserId == userId);

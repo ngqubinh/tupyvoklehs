@@ -6,6 +6,7 @@ using Infrastructure.Data;
 using Infrastructure.Repositories.Auth;
 using Infrastructure.Repositories.Management;
 using Infrastructure.Repositories.Setting;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,7 @@ namespace Infrastructure.DependencyInjection
             services.AddSingleton<IVnPayService, VnPayService>();
             services.AddScoped<IExcelFileImportService, ExcelFileImportService>();
             services.AddScoped<ISenderEmailService, SenderEmailService>();
+            services.AddSingleton<OrderStatusNameTranslateService>();
 
             return services;
         }

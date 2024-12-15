@@ -1,29 +1,72 @@
 ﻿@using Application.ViewModels.Order
+@inject Infrastructure.Services.OrderStatusNameTranslateService TranslateService;
 @model UpdateOrderStatusVM
+
 @{
-    ViewData["Title"] = "UpdatePaymentStatus";
+    ViewData["Title"] = "Cập nhật trạng thái đơn hàng";
 }
 
-<h2>Update order status</h2>
-<a class="my-2 btn btn-primary" asp-action="AllOrders">Back</a>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Cập nhật trạng thái đơn hàng</h2>
+    <a class="btn btn-secondary mb-4" asp-action="AllOrders">Trở lại</a>
 
-<form style="width: 50%;" asp-action="UpdateOrderStatus" class="pt-2">
+    <form style="max-width: 600px; margin: auto;" asp-action="UpdateOrderStatus" class="needs-validation" novalidate>
+        <input type="hidden" asp-for="OrderId" />
 
-    <input type="hidden" asp-for="OrderId" />
-
-    <div class="mb-2">
-        <label>Order status</label>
-        <select class="form-control" asp-for="OrderStatusId" asp-items="@Model.OrderStatusList">
-            <option value="">Select order status</option>
-        </select>
-        <span class="text-danger" asp-validation-for="OrderStatusId"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Update</button>
-
-    @if (TempData["msg"] != null)
-    {
-        <div class="text-info my-2">
-            @TempData["msg"]
+        <div class="mb-3">
+            <label for="orderStatus" class="form-label">Trạng thái đơn hàng</label>
+            <select class="form-control" asp-for="OrderStatusId" asp-items="@Model.OrderStatusList" required>
+                <option value="">Chọn trạng thái</option>
+            </select>
+            <span class="text-danger" asp-validation-for="OrderStatusId"></span>
         </div>
+
+        <button type="submit" class="btn btn-primary w-100">Cập nhật</button>
+
+        @if (TempData["msg"] != null)
+        {
+            <div class="alert alert-info mt-3">
+                @TempData["msg"]
+            </div>
+        }
+    </form>
+</div>
+
+<script>
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+
+<style>
+    .container {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-</form>
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .btn {
+        margin-top: 10px;
+    }
+</style>

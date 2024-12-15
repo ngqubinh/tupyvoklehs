@@ -54,19 +54,8 @@ namespace ShelkovyPut_Main.Controllers.User
             {
                 return Redirect("https://localhost:7235/identity/account/login");
             }
-
             var orders = await _order.UserOrders();
-
-            var profileVM = new ProfileVM()
-            {
-                Email = user.Email,
-                UserName = user.UserName,
-                FullName = user.FullName,
-                PhoneNumber = user.PhoneNumber,
-                CreatedDate = user.CreatedDate,
-                Orders = orders
-            };
-            return View(profileVM);
+            return View(orders);
         }
 
         [HttpGet]
@@ -99,7 +88,6 @@ namespace ShelkovyPut_Main.Controllers.User
             return View(orders);
         }
 
-
         [HttpGet]
         [Route("User/Profile/Edit")]
         public async Task<IActionResult> EditProfile()
@@ -109,7 +97,6 @@ namespace ShelkovyPut_Main.Controllers.User
             {
                 return NotFound("404 Profile page");
             }
-
             var profileVM = new ProfileVM()
             {
                 Email = user.Email,
@@ -118,14 +105,12 @@ namespace ShelkovyPut_Main.Controllers.User
                 PhoneNumber = user.PhoneNumber,
                 CreatedDate = user.CreatedDate,
             };
-
             var viewModel = new EditProfileVM()
             {
                 FullName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 Profile = profileVM,
             };
-
             return View(viewModel);
         }
 
@@ -137,27 +122,22 @@ namespace ShelkovyPut_Main.Controllers.User
             {
                 return BadRequest();
             }
-
             var user = await _userManager.GetUserAsync(User);
             if(user == null)
             {
                 return NotFound();
             }
-
             user.FullName = model.FullName;
             user.PhoneNumber = model.PhoneNumber;
-
             var result = await _userManager.UpdateAsync(user);
             if(result.Succeeded) 
             {
                 return RedirectToAction(nameof(Dashboard));
             }
-
             foreach(var err in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, err.Description);
             }
-
             return View(model);
         }
 
@@ -183,6 +163,27 @@ namespace ShelkovyPut_Main.Controllers.User
                         .ToListAsync();
 
             return View(messages);
+        }
+
+        [HttpGet]
+        [Route("User/TrackOrder")]
+        public async Task<IActionResult> TrackOrder()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Redirect("https://localhost:7235/identity/account/login");
+            }
+
+            var profileVM = new ProfileVM()
+            {
+                Email = user.Email,
+                UserName = user.UserName,
+                FullName = user.FullName,
+                PhoneNumber = user.PhoneNumber,
+                CreatedDate = user.CreatedDate,
+            };
+            return View(profileVM);
         }
     }
 } 

@@ -23,7 +23,7 @@ namespace ShelkovyPut_Main.Controllers.Management
         }
 
         [Authorize(Roles = StaticUserRole.ADMIN)]
-        public async Task<IActionResult> Product()
+        public async Task<IActionResult> Product(string brand)
         {
             var products = await _product.GetAllProducts();
             return View(products);

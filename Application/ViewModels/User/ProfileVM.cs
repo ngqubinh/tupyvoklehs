@@ -15,5 +15,6 @@
         public bool IsPhoneNumberConfirmed { get; set; }
 
         public IEnumerable<MyOrderVM> Orders { get; set; }
+        public UserOrderDetailVM? OrderDetail { get; set; }
     }
 }

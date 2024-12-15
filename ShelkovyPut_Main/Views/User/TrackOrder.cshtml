@@ -1,8 +1,4 @@
-﻿@using Infrastructure.Helppers
-@inject Infrastructure.Services.OrderStatusNameTranslateService TranslateService;
-@model Application.ViewModels.User.ProfileVM
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
     <meta charset="UTF-8">
@@ -29,7 +25,8 @@
     <div class="preloader is-active">
         <div class="preloader__wrap">
 
-            <img class="preloader__img" src="images/preloader.png" alt=""></div>
+            <img class="preloader__img" src="images/preloader.png" alt="">
+        </div>
     </div>
 
     <!--====== Main App ======-->
@@ -1606,8 +1603,6 @@
             <!--====== End - Nav 2 ======-->
         </header>
         <!--====== End - Main Header ======-->
-
-
         <!--====== App Content ======-->
         <div class="app-content">
 
@@ -1621,9 +1616,12 @@
                             <div class="breadcrumb__wrap">
                                 <ul class="breadcrumb__list">
                                     <li class="has-separator">
-                                        <a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+
+                                        <a asp-controller="Home" asp-action="Index">Trang chủ</a>
+                                    </li>
                                     <li class="is-marked">
-                                        <a asp-controller="User" asp-action="MyOrders">Đơn hàng</a></li>
+                                        <a asp-action="TrackOrder">Tra cứu đơn hàng</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -1631,8 +1629,6 @@
                 </div>
             </div>
             <!--====== End - Section 1 ======-->
-
-
             <!--====== Section 2 ======-->
             <div class="u-s-p-b-60">
 
@@ -1664,10 +1660,10 @@
                                                 </li> *@
                                                 <li>
 
-                                                    <a asp-action="TrackOrder">Tra cứu đơn hàng</a>
+                                                    <a asp-action="TrackOrder" class="dash-active">Tra cứu đơn hàng</a>
                                                 </li>
                                                 <li>
-                                                    <a asp-controller="User" asp-action="UserOrders" class="dash-active">Đơn hàng</a>
+                                                    <a asp-controller="User" asp-action="UserOrders">Đơn hàng</a>
                                                 </li>
                                                 <li>
 
@@ -1719,76 +1715,28 @@
                                     <!--====== End - Dashboard Features ======-->
                                 </div>
                                 <div class="col-lg-9 col-md-12">
-                                    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+                                    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white">
                                         <div class="dash__pad-2">
-                                            <h1 class="dash__h1 u-s-m-b-14">Đơn hàng</h1>
+                                            <h1 class="dash__h1 u-s-m-b-14">Tra cứu đơn hàng của bạn</h1>
 
-                                            <span class="dash__text u-s-m-b-30">Thông tin về toàn bộ đơn hàng của bạn.</span>
-                                            <form class="m-order u-s-m-b-30">
-                                                <div class="m-order__select-wrapper">
+                                            <span class="dash__text u-s-m-b-30">Để theo dõi đơn hàng của bạn, vui lòng nhập ID đơn hàng của bạn vào ô bên dưới và nhấn nút "Tra cứu". Mã này đã được cung cấp cho bạn trên biên lai và trong email xác nhận mà bạn đã nhận được.</span>
+                                            <form class="dash-track-order">
+                                                <div class="gl-inline">
+                                                    <div class="u-s-m-b-30">
 
-                                                    <label class="u-s-m-r-8" for="my-order-sort">Hiển thị:</label><select class="select-box select-box--primary-style" id="my-order-sort">
-                                                        <option selected>Tất cả</option>
-                                                    </select></div>
-                                            </form>
-                                            <div class="m-order__list">
-                                                @foreach(var order in Model.Orders)
-                                                {
-                                                    <div class="m-order__get">
-                                                        <div class="manage-o__header u-s-m-b-30">
-                                                            <div class="dash-l-r">
-                                                                <div>
-                                                                    <div class="manage-o__text-2 u-c-secondary">Đơn hàng @order.OrderId</div>
-                                                                    <div class="manage-o__text u-c-silver">Ngày @order.CreatedDate</div>
-                                                                </div>
-                                                                <div>
-                                                                    <div class="dash__link dash__link--brand">
-                                                                        <a asp-controller="User" asp-action="OrderDetails" asp-route-id="@order.OrderId">Chi tiết</a></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        @foreach(var detail in order.OrderDetails)
-                                                        {
-                                                            <div class="manage-o__description">
-                                                                <div class="description__container">
-                                                                    <div class="description__img-wrap">
-                                                                        @if (!string.IsNullOrEmpty(detail.Pictures))
-                                                                        {
-                                                                            var filePaths = detail.Pictures.Split(',');
-                                                                            var firstPicture = filePaths.FirstOrDefault();
-                                                                            if (firstPicture != null)
-                                                                            {
-                                                                                <img class="u-img-fluid u-d-block" src="@firstPicture" alt="@detail.ProductName">
-                                                                            }
-                                                                        }
-                                                                        else 
-                                                                        {
-                                                                            <span>There is no picture</span>
-                                                                        }    
-                                                                    </div>
-                                                                    <div class="description-title">@detail.ProductName</div>
-                                                                </div>
-                                                                <div class="description__info-wrap">
-                                                                    <div>
-                                                                        <span class="manage-o__badge badge--processing">@TranslateService.Translate(order.OrderStatus.StatusName)</span></div>
-                                                                    <div>
+                                                        <label class="gl-label" for="order-id">Mã đơn hàng *</label>
+                                                        <input class="input-text input-text--primary-style" type="text" id="order-id" placeholder="Được tìm thấy trong email của bạn">
+                                                    </div>
+                                                    <div class="u-s-m-b-30">
 
-                                                                        <span class="manage-o__text-2 u-c-silver">Số lượng:
+                                                        <label class="gl-label" for="track-email">Email *</label>
 
-                                                                            <span class="manage-o__text-2 u-c-secondary">@detail.Quantity</span></span></div>
-                                                                    <div>
-
-                                                                        <span class="manage-o__text-2 u-c-silver">Tổng tiền:
-
-                                                                            <span class="manage-o__text-2 u-c-secondary">
-                                                                                @ConcurrencyFormat.FormatCurrency(order.TotalOrderPrice)
-                                                                                </span></span></div>
-                                                                </div>
-                                                        </div>
-                                                    }
+                                                        <input class="input-text input-text--primary-style" type="text" id="track-email" placeholder="Email bạn dùng để đặt hàng">
+                                                    </div>
                                                 </div>
-                                                }
-                                            </div>
+
+                                                <button class="btn btn--e-brand-b-2" type="submit">Tra cứu</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -1801,8 +1749,6 @@
             <!--====== End - Section 2 ======-->
         </div>
         <!--====== End - App Content ======-->
-
-
         <!--====== Main Footer ======-->
         <footer>
             <div class="outer-footer">
@@ -1812,32 +1758,43 @@
                             <div class="outer-footer__content u-s-m-b-40">
 
                                 <span class="outer-footer__content-title">Contact Us</span>
-                                <div class="outer-footer__text-wrap"><i class="fas fa-home"></i>
+                                <div class="outer-footer__text-wrap">
+                                    <i class="fas fa-home"></i>
 
-                                    <span>4247 Ashford Drive Virginia VA-20006 USA</span></div>
-                                <div class="outer-footer__text-wrap"><i class="fas fa-phone-volume"></i>
+                                    <span>4247 Ashford Drive Virginia VA-20006 USA</span>
+                                </div>
+                                <div class="outer-footer__text-wrap">
+                                    <i class="fas fa-phone-volume"></i>
 
-                                    <span>(+0) 900 901 904</span></div>
-                                <div class="outer-footer__text-wrap"><i class="far fa-envelope"></i>
+                                    <span>(+0) 900 901 904</span>
+                                </div>
+                                <div class="outer-footer__text-wrap">
+                                    <i class="far fa-envelope"></i>
 
-                                    <span>contact@domain.com</span></div>
+                                    <span>contact@domain.com</span>
+                                </div>
                                 <div class="outer-footer__social">
                                     <ul>
                                         <li>
 
-                                            <a class="s-fb--color-hover" href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                            <a class="s-fb--color-hover" href="#"><i class="fab fa-facebook-f"></i></a>
+                                        </li>
                                         <li>
 
-                                            <a class="s-tw--color-hover" href="#"><i class="fab fa-twitter"></i></a></li>
+                                            <a class="s-tw--color-hover" href="#"><i class="fab fa-twitter"></i></a>
+                                        </li>
                                         <li>
 
-                                            <a class="s-youtube--color-hover" href="#"><i class="fab fa-youtube"></i></a></li>
+                                            <a class="s-youtube--color-hover" href="#"><i class="fab fa-youtube"></i></a>
+                                        </li>
                                         <li>
 
-                                            <a class="s-insta--color-hover" href="#"><i class="fab fa-instagram"></i></a></li>
+                                            <a class="s-insta--color-hover" href="#"><i class="fab fa-instagram"></i></a>
+                                        </li>
                                         <li>
 
-                                            <a class="s-gplus--color-hover" href="#"><i class="fab fa-google-plus-g"></i></a></li>
+                                            <a class="s-gplus--color-hover" href="#"><i class="fab fa-google-plus-g"></i></a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -1852,19 +1809,24 @@
                                             <ul>
                                                 <li>
 
-                                                    <a href="cart.html">Cart</a></li>
+                                                    <a href="cart.html">Cart</a>
+                                                </li>
                                                 <li>
 
-                                                    <a href="dashboard.html">Account</a></li>
+                                                    <a href="dashboard.html">Account</a>
+                                                </li>
                                                 <li>
 
-                                                    <a href="shop-side-version-2.html">Manufacturer</a></li>
+                                                    <a href="shop-side-version-2.html">Manufacturer</a>
+                                                </li>
                                                 <li>
 
-                                                    <a href="dash-payment-option.html">Finance</a></li>
+                                                    <a href="dash-payment-option.html">Finance</a>
+                                                </li>
                                                 <li>
 
-                                                    <a href="shop-side-version-2.html">Shop</a></li>
+                                                    <a href="shop-side-version-2.html">Shop</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -1877,19 +1839,24 @@
                                             <ul>
                                                 <li>
 
-                                                    <a href="about.html">About us</a></li>
+                                                    <a href="about.html">About us</a>
+                                                </li>
                                                 <li>
 
-                                                    <a href="contact.html">Contact Us</a></li>
+                                                    <a href="contact.html">Contact Us</a>
+                                                </li>
                                                 <li>
 
-                                                    <a href="index.html">Sitemap</a></li>
+                                                    <a href="index.html">Sitemap</a>
+                                                </li>
                                                 <li>
 
-                                                    <a href="dash-my-order.html">Delivery</a></li>
+                                                    <a href="dash-my-order.html">Delivery</a>
+                                                </li>
                                                 <li>
 
-                                                    <a href="shop-side-version-2.html">Store</a></li>
+                                                    <a href="shop-side-version-2.html">Store</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -1907,14 +1874,16 @@
                                             <input type="radio" id="male" name="gender">
                                             <div class="radio-box__state radio-box__state--primary">
 
-                                                <label class="radio-box__label" for="male">Male</label></div>
+                                                <label class="radio-box__label" for="male">Male</label>
+                                            </div>
                                         </div>
                                         <div class="radio-box newsletter__radio">
 
                                             <input type="radio" id="female" name="gender">
                                             <div class="radio-box__state radio-box__state--primary">
 
-                                                <label class="radio-box__label" for="female">Female</label></div>
+                                                <label class="radio-box__label" for="female">Female</label>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="newsletter__group">
@@ -1923,7 +1892,8 @@
 
                                         <input class="input-text input-text--only-white" type="text" id="newsletter" placeholder="Enter your Email">
 
-                                        <button class="btn btn--e-brand newsletter__btn" type="submit">SUBSCRIBE</button></div>
+                                        <button class="btn btn--e-brand newsletter__btn" type="submit">SUBSCRIBE</button>
+                                    </div>
 
                                     <span class="newsletter__text">Subscribe to the mailing list to receive updates on promotions, new arrivals, discount and coupons.</span>
                                 </form>
@@ -1943,7 +1913,8 @@
 
                                     <a href="index.html">Reshop</a>
 
-                                    <span>All Right Reserved</span></div>
+                                    <span>All Right Reserved</span>
+                                </div>
                                 <div class="lower-footer__payment">
                                     <ul>
                                         <li><i class="fab fa-cc-stripe"></i></li>
@@ -1962,8 +1933,6 @@
         </footer>
     </div>
     <!--====== End - Main App ======-->
-
-
     <!--====== Google Analytics: change UA-XXXXX-Y to be your site's ID ======-->
     <script>
         window.ga = function() {
