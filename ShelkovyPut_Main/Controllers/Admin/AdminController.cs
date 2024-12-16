@@ -234,5 +234,12 @@ namespace ShelkovyPut_Main.Controllers.Admin
 
             return View(viewModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOrderStatistics()
+        {
+            var reports = await _order.GetOrderStatistics();
+            return View(reports);
+        }
     }
 }

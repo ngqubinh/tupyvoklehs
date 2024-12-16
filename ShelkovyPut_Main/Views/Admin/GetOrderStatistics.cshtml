@@ -1,0 +1,75 @@
+﻿@using Infrastructure.Helppers
+@model Application.ViewModels.Order.OrderStatistics;
+
+@{
+    ViewData["Title"] = "Thống kê";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Thống Kê Đơn Hàng</h1>
+
+    <div class="row">
+        <!-- Bên trái: Thống kê -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Tổng số đơn hàng</h5>
+                    <p class="card-text">@Model.TotalOrders</p>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Tổng doanh thu</h5>
+                    <p class="card-text">
+                        @ConcurrencyFormat.FormatCurrency(Model.TotalSales)
+                    </p>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Tổng số khách hàng</h5>
+                    <p class="card-text">@Model.TotalCustomers</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bên phải: Sản phẩm Bán chạy -->
+        <div class="col-md-6">
+            <h3>Sản phẩm đã bán</h3>
+            <ul class="list-group">
+                @foreach (var product in Model.TopProducts)
+                {
+                    <li class="list-group-item">
+                        <strong>@product.ProductName:</strong> @product.QuantitySold đã bán - @ConcurrencyFormat.FormatCurrency(product.TotalSales)
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+        margin: 10px;
+    }
+
+    .list-group-item {
+        margin-bottom: 10px;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .col-md-6 {
+        padding: 0 15px;
+    }
+</style>

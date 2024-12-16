@@ -6,7 +6,6 @@ using Domain.Models.Management;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using NuGet.Common;
 
 namespace ShelkovyPut_Main.Controllers.Management
 {
@@ -35,39 +34,6 @@ namespace ShelkovyPut_Main.Controllers.Management
             var products = await _product.GetAllProducts();           
             return Json(products);
         }
-
-        //[HttpGet]
-        //[Route("ProductsForUser")]
-        //public async Task<IActionResult> ProductForUser(string sterm = "", int categoryId = 0)
-        //{
-        //    IEnumerable<Product> products = await _home.GetProducts(sterm, categoryId);
-        //    if (string.IsNullOrWhiteSpace(sterm) && categoryId == 0)
-        //    { 
-        //        products = await _product.GetAllProducts(); 
-        //    } 
-        //    else 
-        //    { 
-        //        products = await _home.GetProducts(sterm, categoryId); 
-        //    }
-
-        //    //if (!products.Any())
-        //    //{
-        //    //    return NotFound("No products found");
-        //    //}
-
-        //    IEnumerable<Category> categories = await _home.Categories();
-        //    IEnumerable<Category> categoriesForSearch = await _home.Categories();
-
-        //    var viewModel = new SEOProduct()
-        //    {
-        //        Products = products,               
-        //        Categories = categories.Where(c => products.Any(p => p.CategoryId == c.Id)),
-        //        CategoryForSearch = categoriesForSearch,
-        //        STerm = sterm,
-        //        CategoryId = categoryId
-        //    };
-        //    return View(viewModel);
-        //}
 
         public async Task<IActionResult> ProductForUser(string sterm = "", int categoryId = 0, int sizeId=0, int page = 1, int pageSize = 12, int brandId=0)
         {
@@ -113,7 +79,6 @@ namespace ShelkovyPut_Main.Controllers.Management
 
             return View(viewModel);
         }
-
 
         [HttpGet]
         [Route("{id}")]

@@ -23,25 +23,37 @@ public class ChatHub : Hub
 
     public async Task SendMessage(string receiverEmail, string message)
     {
-        var currentUserId = _http.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var currentUser = await _userManager.FindByIdAsync(currentUserId);
-        var receiver = await _userManager.FindByEmailAsync(receiverEmail);
-
-        if (currentUser == null || receiver == null)
-            return;
-
-        var chatMessage = new Messages
+        try
         {
-            UserId = currentUserId!,
-            Message = message,
-            Timestamp = DateTime.Now
-        };
+            var currentUserId = _http.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUser = await _userManager.FindByIdAsync(currentUserId);
+            var receiver = await _userManager.FindByEmailAsync(receiverEmail);
 
-        _context.Messages.Add(chatMessage);
-        await _context.SaveChangesAsync();
+            if (currentUser == null || receiver == null)
+            {
+                Console.WriteLine("Either currentUser or receiver is null.");
+                return;
+            }
 
-        await Clients.User(receiver.Id).SendAsync("ReceiveMessage", currentUser.Email, message);
-        await Clients.User(currentUserId).SendAsync("ReceiveMessage", receiver.Email, message);
+            var chatMessage = new Messages
+            {
+                UserId = currentUserId!,
+                Message = message,
+                Timestamp = DateTime.Now
+            };
+
+            _context.Messages.Add(chatMessage);
+            await _context.SaveChangesAsync();
+
+            await Clients.User(receiver.Id).SendAsync("ReceiveMessage", currentUser.Email, message);
+            await Clients.User(currentUserId).SendAsync("ReceiveMessage", receiver.Email, message);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            throw;
+        } 
+        
     }
 
     public async Task<List<Messages>> GetMessages()

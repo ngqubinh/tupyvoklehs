@@ -363,6 +363,38 @@ namespace Infrastructure.Repositories.Management
             return shipper.Id;
         }
 
+        public async Task<OrderStatistics> GetOrderStatistics()
+        {
+            var orders = await _context.Orders
+            .Include(o => o.OrderDetails)
+            .ThenInclude(od => od.Product)
+            .ToListAsync();
+
+            var totalSales = orders.Sum(o => o.OrderDetails.Sum(od => od.Product.ProductPrice * od.Quantity));
+            var totalOrders = orders.Count;
+            var totalCustomers = orders.Select(o => o.UserId).Distinct().Count();
+
+            var topProducts = orders.SelectMany(o => o.OrderDetails)
+                .GroupBy(od => od.Product.ProductName)
+                .Select(g => new TopProduct
+                {
+                    ProductName = g.Key,
+                    QuantitySold = g.Sum(od => od.Quantity),
+                    TotalSales = g.Sum(od => od.Product.ProductPrice * od.Quantity)
+                })
+                .OrderByDescending(p => p.QuantitySold)
+                .Take(5)
+                .ToList();
+
+            return new OrderStatistics
+            {
+                TotalOrders = totalOrders,
+                TotalSales = totalSales,
+                TotalCustomers = totalCustomers,
+                TopProducts = topProducts
+            };
+        }
+
         #region
         private string GetUserId()
         {

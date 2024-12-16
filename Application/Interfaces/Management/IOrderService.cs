@@ -19,5 +19,6 @@ namespace Application.Interfaces.Management
         Task AssignShipperToOrdersAsync(List<UnshippedOrderVM> selectedOrders);
         Task<List<UnshippedOrderVM>> GetShipperTaskAsync(string shipperId);
         Task MarkOrderAsShippedAsync(int orderId);
+        Task<OrderStatistics> GetOrderStatistics();
     }
 }

@@ -4,20 +4,18 @@ const connection = new signalR.HubConnectionBuilder()
 
 document.getElementById("sendButton").disabled = true;
 
-// Event handler for receiving messages
 connection.on("ReceiveMessage", (email, message) => {
     const currentReceiver = document.getElementById("receiverEmail").value;
     const msg = document.createElement("li");
+    msg.classList.add("list-group-item");
     msg.innerHTML = `<strong>${email}</strong>: ${message}`;
     document.getElementById("messagesList").appendChild(msg);
 });
 
-// Start the connection
 connection.start().then(() => {
     document.getElementById("sendButton").disabled = false;
 }).catch(err => console.error(err.toString()));
 
-// Event handler for sending messages
 document.getElementById("messageForm").addEventListener("submit", event => {
     const messageInput = document.getElementById("messageInput").value;
     const receiverEmail = document.getElementById("receiverEmail").value;
@@ -26,7 +24,6 @@ document.getElementById("messageForm").addEventListener("submit", event => {
     document.getElementById("messageInput").value = ''; // Clear the input field after sending
 });
 
-// Event handler for selecting a customer
 document.querySelectorAll('.customer-link').forEach(link => {
     link.addEventListener('click', event => {
         event.preventDefault();
@@ -44,6 +41,7 @@ document.querySelectorAll('.customer-link').forEach(link => {
             .then(messages => {
                 messages.forEach(message => {
                     const msg = document.createElement("li");
+                    msg.classList.add("list-group-item");
                     msg.innerHTML = `<strong>${message.email}</strong>: ${message.message}`;
                     document.getElementById("messagesList").appendChild(msg);
                 });

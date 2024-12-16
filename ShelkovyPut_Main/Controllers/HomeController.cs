@@ -78,6 +78,32 @@ namespace ShelkovyPut_Main.Controllers
             return viewModel == null ? NotFound() : View(viewModel); 
         }
 
+        [HttpGet]
+        [Route("Home/Contract")]
+        public async Task<IActionResult> Contract(int categoryId = 0)
+        {
+            IEnumerable<Category> categoriesForSearch = await _home.Categories();
+            var viewModel = new SEOProduct()
+            {
+                CategoryId = categoryId,
+                CategoryForSearch = categoriesForSearch,
+            };
+            return viewModel == null ? NotFound() : View(viewModel);
+        }
+
+        [HttpGet]
+        [Route("Home/AboutUs")]
+        public async Task<IActionResult> AboutUs(int categoryId = 0)
+        {
+            IEnumerable<Category> categoriesForSearch = await _home.Categories();
+            var viewModel = new SEOProduct()
+            {
+                CategoryId = categoryId,
+                CategoryForSearch = categoriesForSearch,
+            };
+            return viewModel == null ? NotFound() : View(viewModel);
+        }
+
         public IActionResult Privacy()
         {
             return View();
