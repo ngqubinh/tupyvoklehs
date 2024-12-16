@@ -1,7 +1,11 @@
-# Use the official .NET 8 runtime image
+﻿# Use the official .NET 8 runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
+
+# Install necessary libraries
+RUN apt-get update && apt-get install -y \
+    libgssapi-krb5-2
 
 # Use the official .NET 8 SDK image to build the project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -29,4 +33,6 @@ RUN dotnet publish "ShelkovyPut_Main.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Run the application
 ENTRYPOINT ["dotnet", "ShelkovyPut_Main.dll"]

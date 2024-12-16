@@ -1,51 +1,41 @@
-version: '3.8'
-
 services:
-  # .NET Application Service
   app:
     build:
       context: .
-      dockerfile: ShelkovyPut_Main/Dockerfile  # Path to your Dockerfile
+      dockerfile: ShelkovyPut_Main/Dockerfile
     ports:
-      - "8080:80"  # Map port 8080 on host to port 80 in the container
+      - "8080:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - DB_SERVER=db  # The db service will be available using this name
-      - DB_NAME=ShelkobyPut_DB  # Database name
-      - DB_USER=sa  # SQL Server user (SA user)
-      - DB_PASSWORD=nguyenquocbinh214@BB  # SQL Server password
     depends_on:
       db:
-        condition: service_healthy  # Ensure db is healthy before app starts
+        condition: service_healthy
     networks:
-      - app-network  # Custom network to link the services
+      - app-network
 
-  # SQL Server Database Service
   db:
-    image: mcr.microsoft.com/mssql/server  # Official SQL Server image
+    image: mcr.microsoft.com/mssql/server
     environment:
-      - ACCEPT_EULA=Y  # Accept the SQL Server license agreement
-      - SA_PASSWORD=nguyenquocbinh214@BB  # SA user password (ensure it meets SQL Server requirements)
-      - MSSQL_PID=Express  # Optional: Set SQL Server edition, e.g., Express
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=nguyenquocbinh214@BB
+      - MSSQL_PID=Express
     ports:
-      - "1433:1433"  # Map port 1433 on host to port 1433 in the container (default SQL Server port)
+      - "1433:1433"
     volumes:
-      - mssql_data:/var/opt/mssql  # Persist database data
+      - mssql_data:/var/opt/mssql
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:1433"]
-      interval: 30s  # Check every 30 seconds
-      retries: 5  # Retry 5 times before considering the service unhealthy
-      start_period: 30s  # Wait 30 seconds after container start before checking
-      timeout: 10s  # Timeout each check after 10 seconds
+      test: ["CMD-SHELL", "sqlcmd -S localhost -U sa -P nguyenquocbinh214@BB -Q 'SELECT 1'"]
+      interval: 30s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
     networks:
-      - app-network  # Connect db to the same network as the app
+      - app-network
 
-# Define a custom network to ensure both services can communicate
 networks:
   app-network:
-    driver: bridge  # Default network driver
+    driver: bridge
 
-# Define volumes for persistent data storage
 volumes:
   mssql_data:
     driver: local

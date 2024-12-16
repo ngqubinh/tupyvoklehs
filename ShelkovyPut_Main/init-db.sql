@@ -1,0 +1,8 @@
+CREATE DATABASE ShelkobyPut_DB;
+GO
+
+USE ShelkobyPut_DB;
+GO
+
+ALTER AUTHORIZATION ON DATABASE::ShelkobyPut_DB TO sa;
+GO

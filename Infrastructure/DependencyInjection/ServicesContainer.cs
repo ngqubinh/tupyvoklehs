@@ -23,7 +23,14 @@ namespace Infrastructure.DependencyInjection
             {
                 var connectString = config.GetConnectionString("Default") ??
                     throw new InvalidOperationException("Thieu đường dẫn đến CSDL rồi kìa :)) Vui long check trong appsetting.json file");
-                options.UseSqlServer(connectString);
+                options.UseSqlServer(connectString,
+                    sqlServerOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(30),
+                            errorNumbersToAdd: null);
+                    });
             });
 
             services.AddIdentityCore<User>(options =>
