@@ -25,19 +25,32 @@ public class ChatHub : Hub
     {
         try
         {
-            var currentUserId = _http.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!_http.HttpContext.User.Identity.IsAuthenticated)
+            {
+                Console.WriteLine("User is not authenticated.");
+                throw new Exception("User is not authenticated.");
+            }
+
+            var currentUserId = _http.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var currentUser = await _userManager.FindByIdAsync(currentUserId);
             var receiver = await _userManager.FindByEmailAsync(receiverEmail);
 
-            if (currentUser == null || receiver == null)
+            if (currentUser == null)
             {
-                Console.WriteLine("Either currentUser or receiver is null.");
-                return;
+                Console.WriteLine("Current user is null.");
+                throw new Exception("Current user not found.");
+            }
+
+            if (receiver == null)
+            {
+                Console.WriteLine("Receiver is null.");
+                throw new Exception("Receiver not found.");
             }
 
             var chatMessage = new Messages
             {
-                UserId = currentUserId!,
+                UserId = currentUserId,
+                User = currentUser,
                 Message = message,
                 Timestamp = DateTime.Now
             };
@@ -50,36 +63,41 @@ public class ChatHub : Hub
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"An error occurred in SendMessage: {ex.Message}");
+            throw;
+        }
+    }
+
+    public async Task AdminSendMessage(string userId, string message)
+    {
+        try
+        {
+            var adminEmail = "nguyenbinh031104@gmail.com"; // Replace with admin's actual email
+            var admin = await _userManager.FindByEmailAsync(adminEmail);
+
+            if (admin == null)
+            {
+                Console.WriteLine("Admin user is null.");
+                throw new Exception("Admin user not found.");
+            }
+
+            var chatMessage = new Messages
+            {
+                UserId = admin.Id,
+                User = admin,
+                Message = message,
+                Timestamp = DateTime.Now
+            };
+
+            _context.Messages.Add(chatMessage);
+            await _context.SaveChangesAsync();
+
+            await Clients.User(userId).SendAsync("ReceiveMessage", admin.Email, message);
+        }
+        catch (Exception ex)
+        {
             Console.WriteLine($"An error occurred: {ex.Message}");
             throw;
-        } 
-        
-    }
-
-    public async Task<List<Messages>> GetMessages()
-    {
-        var userId = _http.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var user = await _userManager.FindByIdAsync(userId);
-
-        if (user != null && await _userManager.IsInRoleAsync(user, StaticUserRole.ADMIN))
-        {
-            return await _context.Messages.Include(m => m.User).ToListAsync();
         }
-
-        return await _context.Messages.Include(m => m.User)
-            .Where(m => m.UserId == userId || m.User.Email == user.Email)
-            .ToListAsync();
-    }
-
-    public async Task<List<Messages>> GetMessagesForUser(string email)
-    {
-        var receiver = await _userManager.FindByEmailAsync(email);
-        if (receiver != null)
-        {
-            return await _context.Messages.Include(m => m.User)
-                .Where(m => m.UserId == receiver.Id || m.User.Email == email)
-                .ToListAsync();
-        }
-        return new List<Messages>();
     }
 }

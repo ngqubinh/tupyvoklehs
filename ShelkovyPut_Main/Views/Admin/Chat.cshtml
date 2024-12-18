@@ -17,8 +17,7 @@
         </div>
         <div class="col-md-8">
             <h3>Chat</h3>
-            <ul id="messagesList" class="list-group mb-3" style="display: none;">
-            </ul>
+            <ul id="messagesList" class="list-group mb-3" style="display: none;"></ul>
 
             <form id="messageForm" class="needs-validation" novalidate style="display: none;">
                 <input type="hidden" id="receiverEmail" />
@@ -37,32 +36,3 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.9/signalr.min.js"></script>
     <script src="~/js/adminChat.js"></script>
 }
-
-<style>
-    body {
-        background-color: #f8f9fa;
-    }
-
-    .container {
-        background-color: #fff;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .list-group-item {
-        transition: background-color 0.3s;
-    }
-
-        .list-group-item:hover {
-            background-color: #e9ecef;
-        }
-
-    .form-control:invalid {
-        border-color: #dc3545;
-    }
-
-    .form-control:valid {
-        border-color: #28a745;
-    }
-</style>

@@ -54,6 +54,7 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllers();
 
+// Correctly configure endpoints
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<ChatHub>("/chathub");

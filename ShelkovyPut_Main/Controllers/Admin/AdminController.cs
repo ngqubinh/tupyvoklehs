@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ShelkovyPut_Main.Controllers.Admin
 {
-    [Authorize(Roles = StaticUserRole.ADMIN)]
+    //[Authorize(Roles = StaticUserRole.ADMIN)]
     public class AdminController : Controller
     {
         private readonly IOrderService _order;
@@ -201,12 +201,6 @@ namespace ShelkovyPut_Main.Controllers.Admin
             }
 
             return RedirectToAction(nameof(Index));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Reports()
-        {
-            return View();
         }
 
         [HttpGet]

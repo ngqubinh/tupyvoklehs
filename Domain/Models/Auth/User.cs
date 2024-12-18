@@ -11,6 +11,7 @@ namespace Domain.Models.Auth
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         // Relationship
-        public ICollection<Category> Categories { get; set; } = new List<Category>();           
+        public ICollection<Category> Categories { get; set; } = new List<Category>();
+        public ICollection<Messages>? Messages { get; set; }
     }
 }
