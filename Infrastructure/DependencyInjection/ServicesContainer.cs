@@ -61,6 +61,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<ISenderEmailService, SenderEmailService>();
             services.AddSingleton<OrderStatusNameTranslateService>();
             services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+            services.AddSingleton<MongoDBContext>();
 
             return services;
         }

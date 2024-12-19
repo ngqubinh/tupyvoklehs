@@ -19,7 +19,7 @@ document.getElementById("messageForm").addEventListener("submit", event => {
     event.preventDefault();
 
     const messageInput = document.getElementById("messageInput").value;
-    const receiverEmail = "nguyenbinh031104@gmail.com"; // Email của admin
+    const receiverEmail = "nguyenbinh031104@gmail.com"; // Admin email
 
     if (!messageInput) {
         console.error("Message input is empty.");
@@ -34,5 +34,5 @@ document.getElementById("messageForm").addEventListener("submit", event => {
             console.error("SendMessage error:", err.toString());
         });
 
-    document.getElementById("messageInput").value = ''; // Xoá nội dung sau khi gửi
+    document.getElementById("messageInput").value = ''; // Clear the input field after sending
 });

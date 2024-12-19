@@ -1,24 +1,26 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using Domain.Models.Management;
-using Domain.Constants;
 using Microsoft.AspNetCore.Identity;
 using Domain.Models.Auth;
+using Domain.Models.Management;
 using Infrastructure.Data;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Infrastructure.Services;
 
 public class ChatHub : Hub
 {
-    private readonly ShelkobyPutDbContext _context;
+    private readonly MongoDBContext _context;
     private readonly IHttpContextAccessor _http;
     private readonly UserManager<User> _userManager;
+    private readonly MessageMongoInteract _messagesRepository;
 
-    public ChatHub(ShelkobyPutDbContext context, IHttpContextAccessor http, UserManager<User> userManager)
+    public ChatHub(MongoDBContext context, IHttpContextAccessor http, UserManager<User> userManager)
     {
         _context = context;
         _http = http;
         _userManager = userManager;
+        _messagesRepository = new MessageMongoInteract(context);
     }
 
     public async Task SendMessage(string receiverEmail, string message)
@@ -47,7 +49,7 @@ public class ChatHub : Hub
                 throw new Exception("Receiver not found.");
             }
 
-            var chatMessage = new Messages
+            var chatMessage = new OMessage
             {
                 UserId = currentUserId,
                 User = currentUser,
@@ -55,8 +57,7 @@ public class ChatHub : Hub
                 Timestamp = DateTime.Now
             };
 
-            _context.Messages.Add(chatMessage);
-            await _context.SaveChangesAsync();
+            await _messagesRepository.AddMessageAsync(chatMessage);
 
             await Clients.User(receiver.Id).SendAsync("ReceiveMessage", currentUser.Email, message);
             await Clients.User(currentUserId).SendAsync("ReceiveMessage", receiver.Email, message);
@@ -81,7 +82,7 @@ public class ChatHub : Hub
                 throw new Exception("Admin user not found.");
             }
 
-            var chatMessage = new Messages
+            var chatMessage = new OMessage
             {
                 UserId = admin.Id,
                 User = admin,
@@ -89,8 +90,7 @@ public class ChatHub : Hub
                 Timestamp = DateTime.Now
             };
 
-            _context.Messages.Add(chatMessage);
-            await _context.SaveChangesAsync();
+            await _messagesRepository.AddMessageAsync(chatMessage);
 
             await Clients.User(userId).SendAsync("ReceiveMessage", admin.Email, message);
         }

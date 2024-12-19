@@ -1,11 +1,11 @@
-@model IEnumerable<Domain.Models.Management.Messages>
+@model IEnumerable<Domain.Models.Management.OMessage>
 
 <h1>Customer Chat</h1>
 <div id="messagesList">
     @foreach (var message in Model)
     {
-        <div>
-            <strong>@message.User.UserName</strong>: @message.Message
+        <div class="list-group-item">
+            <strong>@message.User?.UserName</strong>: @message.Message
         </div>
     }
 </div>

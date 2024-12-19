@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 namespace ShelkovyPut_Main.Controllers.Admin
 {
@@ -19,11 +20,13 @@ namespace ShelkovyPut_Main.Controllers.Admin
         private readonly IOrderService _order;
         private readonly UserManager<Domain.Models.Auth.User> _userManager;
         private readonly ShelkobyPutDbContext _context;
-        public AdminController(IOrderService order, UserManager<Domain.Models.Auth.User> userManager, ShelkobyPutDbContext context)
+        private readonly MongoDBContext _mongoContext;
+        public AdminController(IOrderService order, UserManager<Domain.Models.Auth.User> userManager, ShelkobyPutDbContext context, MongoDBContext mongoContext)
         {
             _order = order;
             _userManager = userManager;
             _context = context;
+            this._mongoContext = mongoContext;
         }
 
         public async Task<IActionResult> AllOrders()
@@ -127,18 +130,36 @@ namespace ShelkovyPut_Main.Controllers.Admin
     
         public async Task<IActionResult> Chat()
         {
-            var messages = await _context.Messages.Include(m => m.User).ToListAsync();
+            var messages = await _mongoContext.Messages.Find(_ => true).ToListAsync();
+            var distinctCustomers = messages.Select(m => m.User)
+                .DistinctBy(u => u.Email)
+                .ToList();
+            
+            ViewBag.Customers = distinctCustomers;
+
             return View(messages);
         }
     
+        [HttpGet]
         public async Task<IActionResult> GetMessagesByUser(string email)
         {
-            var messages = await _context.Messages
-                .Include(m => m.User)
-                    .Where(m => m.User.Email == email)
-                    .Select(m => new { m.User.Email, m.Message})
-                    .ToListAsync();
-            return Json(messages);
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email is required.");
+            }
+
+            var messages = await _mongoContext.Messages
+                                        .Find(m => m.User.Email == email)
+                                        .SortByDescending(m => m.Timestamp)
+                                        .ToListAsync();
+
+            var messageData = messages.Select(m => new
+            {
+                sender = m.User.Email,
+                text = m.Message
+            }).ToList();
+
+            return Json(messageData);
         }
 
         [HttpGet]

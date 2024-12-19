@@ -1,12 +1,15 @@
 ﻿using Application.Interfaces.Management;
 using Application.ViewModels.User;
 using Domain.Constants;
+using Domain.Models.Auth;
+using Domain.Models.Management;
 using Infrastructure.Data;
 using Infrastructure.Repositories.Management;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using System.Security.Claims;
 
 namespace ShelkovyPut_Main.Controllers.User
@@ -17,11 +20,13 @@ namespace ShelkovyPut_Main.Controllers.User
         private readonly UserManager<Domain.Models.Auth.User> _userManager;
         private readonly ShelkobyPutDbContext _context;
         private readonly IOrderService _order;
-        public UserController(UserManager<Domain.Models.Auth.User> userManager, ShelkobyPutDbContext context, IOrderService order)
+        private readonly MongoDBContext _mongoContext;
+        public UserController(UserManager<Domain.Models.Auth.User> userManager, ShelkobyPutDbContext context, IOrderService order, MongoDBContext mongoContext)
         {
             _userManager = userManager;
             _context = context;
             _order = order;
+            this._mongoContext = mongoContext;
         }
 
         [HttpGet]
@@ -157,10 +162,19 @@ namespace ShelkovyPut_Main.Controllers.User
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userRole = HttpContext.User.FindFirstValue(ClaimTypes.Role);
-            var messages = await _context.Messages
-                .Include(m => m.User)
-                    .Where(m => m.UserId == userId || userRole == StaticUserRole.ADMIN)
-                        .ToListAsync();
+
+            var filter = Builders<OMessage>.Filter.Where(m => m.UserId == userId || userRole == StaticUserRole.ADMIN);
+            var messages = await _mongoContext.Messages.Find(filter).ToListAsync();
+
+            // Manually join with User collection
+            var userIds = messages.Select(m => m.UserId).Distinct().ToList();
+            var users = await _mongoContext.Users.Find(Builders<Domain.Models.Auth.User>.Filter.In(u => u.Id, userIds)).ToListAsync();
+            var userDictionary = users.ToDictionary(u => u.Id, u => u);
+
+            foreach (var message in messages)
+            {
+                message.User = userDictionary.GetValueOrDefault(message.UserId);
+            }
 
             return View(messages);
         }

@@ -6,12 +6,12 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Domain.Models.Management
 {
-    public class Messages
+    public class OMessage
     {
         [BsonId]
         // [Key]
         [BsonRepresentation(BsonType.ObjectId)]
-        public int Id { get; set; }
+        public ObjectId Id { get; set; }
         public string UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public User User { get; set; }
