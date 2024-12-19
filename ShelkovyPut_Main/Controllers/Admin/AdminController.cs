@@ -256,5 +256,20 @@ namespace ShelkovyPut_Main.Controllers.Admin
             var reports = await _order.GetOrderStatistics();
             return View(reports);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetBrandSales()
+        {
+            var brandSales = await _context.OrderDetails
+                .Include(p => p.Product)
+                    .ThenInclude(b => b.Brands)
+                .GroupBy(od => od.Product.Brands.BrandName)
+                .Select(g => new BrandSalesVM(){
+                    BrandName = g.Key,
+                    TotalSales = g.Sum(od => od.Quantity * od.Product.ProductPrice)
+                })
+                .ToListAsync();
+            return View(brandSales);
+        }
     }
 }

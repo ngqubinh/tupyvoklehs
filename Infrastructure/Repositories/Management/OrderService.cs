@@ -366,9 +366,10 @@ namespace Infrastructure.Repositories.Management
         public async Task<OrderStatistics> GetOrderStatistics()
         {
             var orders = await _context.Orders
-            .Include(o => o.OrderDetails)
-            .ThenInclude(od => od.Product)
-            .ToListAsync();
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product)
+                .ThenInclude(p => p.Brands)
+                .ToListAsync();
 
             var totalSales = orders.Sum(o => o.OrderDetails.Sum(od => od.Product.ProductPrice * od.Quantity));
             var totalOrders = orders.Count;
@@ -386,14 +387,25 @@ namespace Infrastructure.Repositories.Management
                 .Take(5)
                 .ToList();
 
+            var brandSales = orders.SelectMany(o => o.OrderDetails)
+                .GroupBy(od => od.Product.Brands.BrandName)
+                .Select(g => new BrandSalesVM
+                {
+                    BrandName = g.Key,
+                    TotalSales = g.Sum(od => od.Product.ProductPrice * od.Quantity)
+                })
+                .ToList();
+
             return new OrderStatistics
             {
                 TotalOrders = totalOrders,
                 TotalSales = totalSales,
                 TotalCustomers = totalCustomers,
-                TopProducts = topProducts
+                TopProducts = topProducts,
+                BrandSalesVMs = brandSales
             };
         }
+
 
         #region
         private string GetUserId()

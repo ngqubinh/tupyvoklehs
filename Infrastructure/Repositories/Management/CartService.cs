@@ -152,6 +152,7 @@ namespace Infrastructure.Repositories.Management
                 throw new Exception(ex.Message);
             }
         }
+        
         public async Task<int> GetCartItemCount(string userId = "")
         {
             if (!string.IsNullOrEmpty(userId))
