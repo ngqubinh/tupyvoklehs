@@ -1,12 +1,13 @@
 using Domain.Models.Auth;
 using Infrastructure.DependencyInjection;
-using Microsoft.AspNetCore.SignalR;
-using Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options => {
+    // enable content negotiation
+    options.RespectBrowserAcceptHeader = true;
+});
 builder.Services.ShelkovyPutService(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -54,7 +55,6 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllers();
 
-// Correctly configure endpoints
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<ChatHub>("/chathub");

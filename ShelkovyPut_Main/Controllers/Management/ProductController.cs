@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Request.Management;
+﻿using System.Net.Mime;
+using Application.DTOs.Request.Management;
 using Application.Interfaces.Management;
 using Application.ViewModels;
 using Domain.Constants;
@@ -6,6 +7,7 @@ using Domain.Models.Management;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Net.Http.Headers;
 
 namespace ShelkovyPut_Main.Controllers.Management
 {
@@ -35,6 +37,8 @@ namespace ShelkovyPut_Main.Controllers.Management
             return Json(products);
         }
 
+        [HttpGet("ProductForUser")]
+        [Produces(MediaTypeNames.Application.Json, MediaTypeNames.Text.Html)]
         public async Task<IActionResult> ProductForUser(string sterm = "", int categoryId = 0, int sizeId=0, int page = 1, int pageSize = 12, int brandId=0)
         {
             IEnumerable<Product> products;
@@ -76,6 +80,17 @@ namespace ShelkovyPut_Main.Controllers.Management
                 PageSize = pageSize,
                 TotalCount = await _home.GetTotalProductCount(sterm, categoryId)
             };
+
+            // if(Request.Headers["Accept"].ToString().Contains("application/json"))
+            // {
+            //     return Json(viewModel);
+            // }
+
+            var acceptHeader = Request.Headers[HeaderNames.Accept].ToString();
+            if(acceptHeader.Contains(MediaTypeNames.Application.Json))
+            {
+                return Json(viewModel);
+            }
 
             return View(viewModel);
         }

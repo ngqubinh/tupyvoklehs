@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Management;
+﻿using System.Text.Json;
+using Application.Interfaces.Management;
 using Application.Interfaces.Setting;
 using Domain.Models.Auth;
 using Infrastructure.Data;
@@ -46,6 +47,14 @@ namespace Infrastructure.DependencyInjection
             services.AddAuthorization();
             services.AddRazorPages();
 
+            // config json
+            var jsonConfigure = new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            };
+            services.AddSingleton(jsonConfigure);
+
             // Services
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IInitService, InitService>();
@@ -61,7 +70,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<ISenderEmailService, SenderEmailService>();
             services.AddSingleton<OrderStatusNameTranslateService>();
             services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-            services.AddSingleton<MongoDBContext>();
+            services.AddSingleton<MongoDBContext>(); // config for mongodb data server
 
             return services;
         }

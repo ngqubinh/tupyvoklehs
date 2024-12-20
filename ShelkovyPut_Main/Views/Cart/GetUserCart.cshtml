@@ -1811,7 +1811,7 @@
                                                                         <td>Gía tiền</td>
                                                                         @{
                                                                             double total = item.Product.ProductPrice * item.Quantity;
-                                                                            double discountTotal = item.Product.DiscountProductprice * item.Quantity;
+                                                                            double discountTotal = item.Product.DiscountProductprice.Value * item.Quantity;
                                                                         }
                                                                         @if (item.Product.DiscountProductprice == 0 || item.Product.DiscountProductprice == null)
                                                                         {
@@ -1827,7 +1827,7 @@
                                                                         <td>Tổng tiền</td>
                                                                         @{
                                                                             double totalCount = item.Product.ProductPrice * item.Quantity;
-                                                                            double discountTotalCount = item.Product.DiscountProductprice * item.Quantity;
+                                                                            double discountTotalCount = item.Product.DiscountProductprice.Value * item.Quantity;
                                                                         }
                                                                         @if (item.Product.DiscountProductprice == 0 || item.Product.DiscountProductprice == null)
                                                                         {

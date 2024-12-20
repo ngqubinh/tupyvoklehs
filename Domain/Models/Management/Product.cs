@@ -16,7 +16,7 @@ namespace Domain.Models.Management
         public string? Pictures { get; set; }
         public double ProductPrice { get; set; }
         public bool IsFeatured { get; set; } = false;
-        public double DiscountProductprice { get; set; }
+        public double? DiscountProductprice { get; set; }
         public int BrandId { get; set; }
         [ForeignKey(nameof(BrandId))]
         public Brands Brands { get; set; }

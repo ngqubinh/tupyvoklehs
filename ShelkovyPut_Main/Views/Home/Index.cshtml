@@ -1765,7 +1765,7 @@
                                                         }
                                                         else
                                                         {
-                                                                <span class="product-l__price">@ConcurrencyFormat.FormatCurrency(i.DiscountProductprice)
+                                                                <span class="product-l__price">@ConcurrencyFormat.FormatCurrency(i.DiscountProductprice.Value)
                                                                 <span class="product-l__discount">@ConcurrencyFormat.FormatCurrency(i.ProductPrice)</span>
                                                             </span>
                                                         }     
@@ -1830,7 +1830,7 @@
                                                         else
                                                         {
                                                             <span class="product-l__price">
-                                                                @ConcurrencyFormat.FormatCurrency(i.DiscountProductprice)
+                                                                @ConcurrencyFormat.FormatCurrency(i.DiscountProductprice.Value)
                                                                 <span class="product-l__discount">@ConcurrencyFormat.FormatCurrency(i.ProductPrice)</span>
                                                             </span>
                                                         }
