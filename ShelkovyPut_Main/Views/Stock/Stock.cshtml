@@ -5,29 +5,32 @@
     ViewData["Title"] = "Stock";
 }
 
-<h2>Stocks</h2>
+<h2 class="mt-4 mb-4 text-center">Stock Management</h2>
 
-<form asp-action="Stock" method="get" class="my-2 d-flex gap-2">
-    <input type="text" name="sTerm" class="form-control w-25" placeholder="Search by book" />
+<form asp-action="Stock" method="get" class="d-flex justify-content-center my-4 gap-2">
+    <input type="text" name="sTerm" class="form-control w-25" placeholder="Search by product" />
     <button type="submit" class="btn btn-primary">Find</button>
-    <a asp-action="Stock" asp-controller="Stock" class="btn btn-primary">Clear</a>
+    <a asp-action="Stock" asp-controller="Stock" class="btn btn-secondary">Clear</a>
 </form>
 
-<table class="table table-bordered">
-    <tr>
-        <th>Products</th>
-        <th>Stock</th>
-        <th>Actions</th>
-    </tr>
-    @foreach (var item in Model)
-    {
+<table class="table table-hover table-striped table-bordered">
+    <thead class="thead-dark">
         <tr>
-            <td>@item.ProductName</td>
-            <td>@item.Quantity</td>
-            <td>
-                <a asp-action="ManangeStock" asp-controller="Stock" asp-route-productId="@item.ProductId" class="btn btn-info"> Update Stock</a>
-            </td>
+            <th scope="col">Product</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Actions</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.Quantity</td>
+                <td>
+                    <a asp-action="ManageStock" asp-controller="Stock" asp-route-productId="@item.ProductId" class="btn btn-info">Update Stock</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
-

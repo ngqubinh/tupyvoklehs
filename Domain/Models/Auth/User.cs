@@ -13,5 +13,6 @@ namespace Domain.Models.Auth
         // Relationship
         public ICollection<Category> Categories { get; set; } = new List<Category>();
         public ICollection<Messages>? Messages { get; set; }
+        public ICollection<RefreshTokens> RefreshTokens = new List<RefreshTokens>();
     }
 }

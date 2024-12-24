@@ -79,7 +79,7 @@
 
                                 <!--====== List ======-->
                                 <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
-                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="Account">
+                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="Tài khoản">
 
                                         <a><i class="far fa-user-circle"></i></a>
 
@@ -136,7 +136,7 @@
 
                                         <!--====== End - Dropdown ======-->
                                     </li>
-                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="Settings">
+                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="Cài đặt">
 
                                         <a><i class="fas fa-user-cog"></i></a>
 
@@ -146,64 +146,33 @@
                                         <ul style="width:120px">
                                             <li class="has-dropdown has-dropdown--ul-right-100">
 
-                                                <a>Language<i class="fas fa-angle-down u-s-m-l-6"></i></a>
+                                                <a>Ngôn ngữ<i class="fas fa-angle-down u-s-m-l-6"></i></a>
 
                                                 <!--====== Dropdown ======-->
 
                                                 <span class="js-menu-toggle"></span>
                                                 <ul style="width:120px">
                                                     <li>
-
-                                                        <a class="u-c-brand">ENGLISH</a>
+                                                        <a class="u-c-brand">Tiếng Anh</a>
                                                     </li>
                                                     <li>
-
-                                                        <a>ARABIC</a>
+                                                        <a>Tiếng Việt</a>
                                                     </li>
-                                                    <li>
-
-                                                        <a>FRANCAIS</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a>ESPANOL</a>
-                                                    </li>
+                                                    
                                                 </ul>
                                                 <!--====== End - Dropdown ======-->
                                             </li>
-                                            <li class="has-dropdown has-dropdown--ul-right-100">
-
-                                                <a>Currency<i class="fas fa-angle-down u-s-m-l-6"></i></a>
-
-                                                <!--====== Dropdown ======-->
-
-                                                <span class="js-menu-toggle"></span>
-                                                <ul style="width:225px">
-                                                    <li>
-
-                                                        <a class="u-c-brand">$ - US DOLLAR</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a>£ - BRITISH POUND STERLING</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a>€ - EURO</a>
-                                                    </li>
-                                                </ul>
-                                                <!--====== End - Dropdown ======-->
-                                            </li>
+                                            
                                         </ul>
                                         <!--====== End - Dropdown ======-->
                                     </li>
-                                    <li data-tooltip="tooltip" data-placement="left" title="Contact">
+                                    @* <li data-tooltip="tooltip" data-placement="left" title="Contact">
 
                                         <a href="tel:+0900901904"><i class="fas fa-phone-volume"></i></a>
-                                    </li>
+                                    </li> *@
                                     <li data-tooltip="tooltip" data-placement="left" title="Mail">
 
-                                        <a href="mailto:contact@domain.com"><i class="far fa-envelope"></i></a>
+                                        <a href="mailto:nguyenbinh031104@gmail.com"><i class="far fa-envelope"></i></a>
                                     </li>
                                 </ul>
                                 <!--====== End - List ======-->
@@ -263,11 +232,11 @@
                                 <!--====== List ======-->
                                 <ul class="ah-list ah-list--design2 ah-list--link-color-secondary">
                                     <li>
-                                        <a href="shop-side-version-2.html">MỚI RA MẮT</a>
+                                        <a href="shop-side-version-2.html">Mới Ra Mắt</a>
                                     </li>
                                     <li class="has-dropdown">
 
-                                        <a href="shop-side-version-2.html">LOẠI<i class="fas fa-angle-down u-s-m-l-6"></i></a>
+                                        <a href="shop-side-version-2.html">Loại<i class="fas fa-angle-down u-s-m-l-6"></i></a>
                                         <!--====== Dropdown ======-->
 
                                         <span class="js-menu-toggle"></span>
@@ -284,7 +253,7 @@
                                     </li>
                                     <li class="has-dropdown">
 
-                                        <a href="shop-side-version-2.html">BRAND<i class="fas fa-angle-down u-s-m-l-6"></i></a>
+                                        <a href="shop-side-version-2.html">Brand<i class="fas fa-angle-down u-s-m-l-6"></i></a>
 
                                         <!--====== Dropdown ======-->
 
@@ -299,14 +268,20 @@
                                     </li>
 
                                     <li>
-                                        <a asp-controller="Product" asp-action="ProductForUser">SẢN PHẨM</a>
+                                        <a asp-controller="Product" asp-action="ProductForUser">Sản Phẩm</a>
                                     </li>
-                                    @*  @if(User.IsInRole("ADMIN"))
+                                    <li>
+                                        <a asp-controller="Product" asp-action="ProductForUser">Liên Hệ</a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Product" asp-action="ProductForUser">Về Chúng Tôi</a>
+                                    </li>
+                                     @if(User.IsInRole("ADMIN"))
                                     {
                                         <li>
-                                            <a asp-controller="User" asp-action="Dashboard">Dashboard</a>
+                                            <a asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
                                         </li>
-                                    } *@
+                                    }
                                 </ul>
                                 <!--====== End - List ======-->
                             </div>
@@ -2304,21 +2279,21 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="outer-footer__content u-s-m-b-40">
 
-                                <span class="outer-footer__content-title">Contact Us</span>
+                                <span class="outer-footer__content-title">Liên Hệ Chúng Tôi</span>
                                 <div class="outer-footer__text-wrap">
                                     <i class="fas fa-home"></i>
 
-                                    <span>4247 Ashford Drive Virginia VA-20006 USA</span>
+                                    <span>87, Nguyễn Văn Cư nối dài, Ninh Kiều, Cần Thơ</span>
                                 </div>
                                 <div class="outer-footer__text-wrap">
                                     <i class="fas fa-phone-volume"></i>
 
-                                    <span>(+0) 900 901 904</span>
+                                    <span>(+84) 937149365</span>
                                 </div>
                                 <div class="outer-footer__text-wrap">
                                     <i class="far fa-envelope"></i>
 
-                                    <span>contact@domain.com</span>
+                                    <span>nguyenbinh031104@gmail.com</span>
                                 </div>
                                 <div class="outer-footer__social">
                                     <ul>
@@ -2351,28 +2326,28 @@
                                 <div class="col-lg-6 col-md-6">
                                     <div class="outer-footer__content u-s-m-b-40">
 
-                                        <span class="outer-footer__content-title">Information</span>
+                                        <span class="outer-footer__content-title">Thông Tin</span>
                                         <div class="outer-footer__list-wrap">
                                             <ul>
                                                 <li>
 
-                                                    <a href="cart.html">Cart</a>
+                                                    <a href="cart.html">Giỏ hàng</a>
                                                 </li>
                                                 <li>
 
-                                                    <a href="dashboard.html">Account</a>
+                                                    <a href="dashboard.html">Tài khoản</a>
                                                 </li>
                                                 <li>
 
-                                                    <a href="shop-side-version-2.html">Manufacturer</a>
+                                                    <a href="shop-side-version-2.html">Brand</a>
                                                 </li>
                                                 <li>
 
-                                                    <a href="dash-payment-option.html">Finance</a>
+                                                    <a href="dash-payment-option.html">Loại</a>
                                                 </li>
                                                 <li>
 
-                                                    <a href="shop-side-version-2.html">Shop</a>
+                                                    <a href="shop-side-version-2.html">Cửa hàng</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -2382,17 +2357,17 @@
                                     <div class="outer-footer__content u-s-m-b-40">
                                         <div class="outer-footer__list-wrap">
 
-                                            <span class="outer-footer__content-title">Our Company</span>
+                                            <span class="outer-footer__content-title">Cửa Hàng</span>
                                             <ul>
                                                 <li>
 
-                                                    <a href="about.html">About us</a>
+                                                    <a href="about.html">Về chúng tôi</a>
                                                 </li>
                                                 <li>
 
-                                                    <a href="contact.html">Contact Us</a>
+                                                    <a href="contact.html">Liên hệ</a>
                                                 </li>
-                                                <li>
+                                                @* <li>
 
                                                     <a href="index.html">Sitemap</a>
                                                 </li>
@@ -2403,7 +2378,7 @@
                                                 <li>
 
                                                     <a href="shop-side-version-2.html">Store</a>
-                                                </li>
+                                                </li> *@
                                             </ul>
                                         </div>
                                     </div>
@@ -2456,9 +2431,9 @@
                             <div class="lower-footer__content">
                                 <div class="lower-footer__copyright">
 
-                                    <span>Copyright © 2018</span>
+                                    <span>Copyright © 2024</span>
 
-                                    <a href="index.html">Reshop</a>
+                                    <a href="index.html">thegoatboy3.thrift</a>
 
                                     <span>All Right Reserved</span>
                                 </div>
@@ -2771,27 +2746,27 @@
                             <div class="col-lg-6 new-l__col-2">
                                 <div class="new-l__section u-s-m-t-30">
                                     <div class="u-s-m-b-8 new-l--center">
-                                        <h3 class="new-l__h3">Newsletter</h3>
+                                        <h3 class="new-l__h3">TIN MỚI</h3>
                                     </div>
                                     <div class="u-s-m-b-30 new-l--center">
-                                        <p class="new-l__p1">Sign up for emails to get the scoop on new arrivals, special sales and more.</p>
+                                        <p class="new-l__p1">Đăng ký email để biết thông tin về hàng mới về, chương trình khuyến mại đặc biệt và nhiều thông tin khác.</p>
                                     </div>
                                     <form class="new-l__form">
                                         <div class="u-s-m-b-15">
 
-                                            <input class="news-l__input" type="text" placeholder="E-mail Address">
+                                            <input class="news-l__input" type="text" placeholder="Địa chỉ E-Mail">
                                         </div>
                                         <div class="u-s-m-b-15">
 
-                                            <button class="btn btn--e-brand-b-2" type="submit">Sign up!</button>
+                                            <button class="btn btn--e-brand-b-2" type="submit">Đăng ký!</button>
                                         </div>
                                     </form>
                                     <div class="u-s-m-b-15 new-l--center">
-                                        <p class="new-l__p2">By Signing up, you agree to receive Reshop offers,<br />promotions and other commercial messages. You may unsubscribe at any time.</p>
+                                        <p class="new-l__p2">Bằng cách Đăng ký, bạn đồng ý nhận các ưu đãi,<br />khuyến mãi và các thông điệp thương mại khác của Reshop. Bạn có thể hủy đăng ký bất kỳ lúc nào.</p>
                                     </div>
                                     <div class="u-s-m-b-15 new-l--center">
 
-                                        <a class="new-l__link" data-dismiss="modal">No Thanks</a>
+                                        <a class="new-l__link" data-dismiss="modal">Đóng</a>
                                     </div>
                                 </div>
                             </div>

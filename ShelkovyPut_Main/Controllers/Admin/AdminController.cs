@@ -14,7 +14,7 @@ using MongoDB.Driver;
 
 namespace ShelkovyPut_Main.Controllers.Admin
 {
-    //[Authorize(Roles = StaticUserRole.ADMIN)]
+    [Authorize(Roles = StaticUserRole.ADMIN)]
     public class AdminController : Controller
     {
         private readonly IOrderService _order;
@@ -249,6 +249,55 @@ namespace ShelkovyPut_Main.Controllers.Admin
 
             return View(viewModel);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> LockUser(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("User ID is required.");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Set lockout end date to a specific time in the future
+            await _userManager.SetLockoutEndDateAsync(user, DateTime.UtcNow.AddYears(7));
+
+            // Optionally, update the IsLockedOut property
+            user.LockoutEnabled = true;
+            await _userManager.UpdateAsync(user);
+
+            return RedirectToAction(nameof(UserDeatils), new { userId = userId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UnlockUser(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("User ID is required.");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Remove lockout end date
+            await _userManager.SetLockoutEndDateAsync(user, null);
+
+            // Optionally, update the IsLockedOut property
+            user.LockoutEnabled = false;
+            await _userManager.UpdateAsync(user);
+
+            return RedirectToAction(nameof(UserDeatils), new { userId = userId });
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> GetOrderStatistics()

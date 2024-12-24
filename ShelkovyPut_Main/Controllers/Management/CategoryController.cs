@@ -13,7 +13,14 @@ namespace ShelkovyPut_Main.Controllers.Management
             _category = category;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Category()
+        {
+            var categories = await _category.GetAllCategories();
+            return View(categories);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Category2()
         {
             var categories = await _category.GetAllCategories();
             return View(categories);

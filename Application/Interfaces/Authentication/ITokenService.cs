@@ -5,6 +5,6 @@ namespace Application.Interfaces.Authentication
     public interface ITokenService
     {
         Task<string> CreateAccessToken(User user);
-		RefreshToken CreateRefreshToken(User user);
+		RefreshTokens CreateRefreshToken(User user);
     }
 }

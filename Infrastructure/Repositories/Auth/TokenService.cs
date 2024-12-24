@@ -48,13 +48,13 @@ namespace Infrastructure.Repositories.Auth
 			return tokenHandler.WriteToken(jwt);
 		}
 
-		public RefreshToken CreateRefreshToken(User user)
+		public RefreshTokens CreateRefreshToken(User user)
 		{
 			var token = new byte[32];
 			using var randomNumber = RandomNumberGenerator.Create();
 			randomNumber.GetBytes(token);
 
-			var refreshToken = new RefreshToken()
+			var refreshToken = new RefreshTokens()
 			{
 				Token = Convert.ToBase64String(token),
 				User = user,

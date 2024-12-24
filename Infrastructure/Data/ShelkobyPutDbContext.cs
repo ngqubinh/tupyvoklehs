@@ -25,6 +25,7 @@ namespace Infrastructure.Data
         public DbSet<Messages> Messages { get; set; }
         public DbSet<Brands> Brands { get; set; }
         public DbSet<Size> Sizes { get; set; }
+        public DbSet<RefreshTokens> RefreshTokens { get; set; }
 
         // Rename the identity tables
         protected override void OnModelCreating(ModelBuilder builder)

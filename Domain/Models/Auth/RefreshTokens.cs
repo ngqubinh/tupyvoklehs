@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Models.Auth
 {
-    public class RefreshToken
+    public class RefreshTokens
     {
         [Key]
 		public Guid ID { get; set; }

@@ -1,8 +1,10 @@
 ﻿using System.Text.Json;
+using Application.Interfaces.Authentication;
 using Application.Interfaces.Management;
 using Application.Interfaces.Setting;
 using Domain.Models.Auth;
 using Infrastructure.Data;
+using Infrastructure.Repositories.Auth;
 using Infrastructure.Repositories.Management;
 using Infrastructure.Repositories.Setting;
 using Infrastructure.Services;
@@ -71,6 +73,8 @@ namespace Infrastructure.DependencyInjection
             services.AddSingleton<OrderStatusNameTranslateService>();
             services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
             services.AddSingleton<MongoDBContext>(); // config for mongodb data server
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             return services;
         }
