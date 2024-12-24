@@ -78,14 +78,14 @@
 
                                 <!--====== List ======-->
                                 <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
-                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="Account">
+                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="Tài khoản">
 
                                         <a><i class="far fa-user-circle"></i></a>
 
                                         <!--====== Dropdown ======-->
 
                                         <span class="js-menu-toggle"></span>
-                                        @if (SignInManager.IsSignedIn(User))
+                                        @if(SignInManager.IsSignedIn(User))
                                         {
                                             <ul style="width:120px">
                                                 <li>
@@ -95,13 +95,13 @@
 
                                                         <span>Tài khoản</span>
                                                     </a> *@
-                                                    <a asp-controller="User" asp-action="Dashboard"
-                                                       asp-route-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)">
+                                                    <a asp-controller="User" asp-action="Account"
+                                                    asp-route-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)">
                                                         <i class="fas fa-user-circle u-s-m-r-6"></i>
 
                                                         <span>Tài khoản</span>
                                                     </a>
-                                                </li>
+                                                </li>                                                
                                                 <li>
 
                                                     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
@@ -111,7 +111,7 @@
                                                 </li>
                                             </ul>
                                         }
-                                        else
+                                        else 
                                         {
                                             <ul style="width:120px">
                                                 <li>
@@ -130,12 +130,12 @@
                                                         <span>Đăng nhập</span>
                                                     </a>
                                                 </li>
-                                            </ul>
+                                            </ul>                                       
                                         }
 
                                         <!--====== End - Dropdown ======-->
                                     </li>
-                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="Settings">
+                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="Cài đặt">
 
                                         <a><i class="fas fa-user-cog"></i></a>
 
@@ -145,64 +145,33 @@
                                         <ul style="width:120px">
                                             <li class="has-dropdown has-dropdown--ul-right-100">
 
-                                                <a>Language<i class="fas fa-angle-down u-s-m-l-6"></i></a>
+                                                <a>Ngôn ngữ<i class="fas fa-angle-down u-s-m-l-6"></i></a>
 
                                                 <!--====== Dropdown ======-->
 
                                                 <span class="js-menu-toggle"></span>
                                                 <ul style="width:120px">
                                                     <li>
-
-                                                        <a class="u-c-brand">ENGLISH</a>
+                                                        <a class="u-c-brand">Tiếng Anh</a>
                                                     </li>
                                                     <li>
-
-                                                        <a>ARABIC</a>
+                                                        <a>Tiếng Việt</a>
                                                     </li>
-                                                    <li>
-
-                                                        <a>FRANCAIS</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a>ESPANOL</a>
-                                                    </li>
+                                                    
                                                 </ul>
                                                 <!--====== End - Dropdown ======-->
                                             </li>
-                                            <li class="has-dropdown has-dropdown--ul-right-100">
-
-                                                <a>Currency<i class="fas fa-angle-down u-s-m-l-6"></i></a>
-
-                                                <!--====== Dropdown ======-->
-
-                                                <span class="js-menu-toggle"></span>
-                                                <ul style="width:225px">
-                                                    <li>
-
-                                                        <a class="u-c-brand">$ - US DOLLAR</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a>£ - BRITISH POUND STERLING</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a>€ - EURO</a>
-                                                    </li>
-                                                </ul>
-                                                <!--====== End - Dropdown ======-->
-                                            </li>
+                                            
                                         </ul>
                                         <!--====== End - Dropdown ======-->
                                     </li>
-                                    <li data-tooltip="tooltip" data-placement="left" title="Contact">
+                                    @* <li data-tooltip="tooltip" data-placement="left" title="Contact">
 
                                         <a href="tel:+0900901904"><i class="fas fa-phone-volume"></i></a>
-                                    </li>
+                                    </li> *@
                                     <li data-tooltip="tooltip" data-placement="left" title="Mail">
 
-                                        <a href="mailto:contact@domain.com"><i class="far fa-envelope"></i></a>
+                                        <a href="mailto:nguyenbinh031104@gmail.com"><i class="far fa-envelope"></i></a>
                                     </li>
                                 </ul>
                                 <!--====== End - List ======-->
@@ -239,6 +208,8 @@
                                         <span class="mega-text">M</span>
 
                                         <!--====== Mega Menu ======-->
+
+
                                         <!--====== End - Mega Menu ======-->
                                     </li>
                                 </ul>
@@ -260,16 +231,16 @@
                                 <!--====== List ======-->
                                 <ul class="ah-list ah-list--design2 ah-list--link-color-secondary">
                                     <li>
-                                        <a href="shop-side-version-2.html">MỚI RA MẮT</a>
+                                        <a href="shop-side-version-2.html">Mới Ra Mắt</a>
                                     </li>
                                     <li class="has-dropdown">
 
-                                        <a href="shop-side-version-2.html">LOẠI<i class="fas fa-angle-down u-s-m-l-6"></i></a>
+                                        <a href="shop-side-version-2.html">Loại<i class="fas fa-angle-down u-s-m-l-6"></i></a>
                                         <!--====== Dropdown ======-->
 
                                         <span class="js-menu-toggle"></span>
                                         <ul style="width:200px">
-                                            @foreach (var category in Model.CategoryForSearch)
+                                            @foreach(var category in Model.CategoryForSearch)
                                             {
                                                 <li>
                                                     <a href="@Url.RouteUrl(new { controller = "Product", action = "ProductForUser", categoryId = category.Id })">@category.CategoryName</a>
@@ -281,7 +252,7 @@
                                     </li>
                                     <li class="has-dropdown">
 
-                                        <a href="shop-side-version-2.html">BRAND<i class="fas fa-angle-down u-s-m-l-6"></i></a>
+                                        <a href="shop-side-version-2.html">Brand<i class="fas fa-angle-down u-s-m-l-6"></i></a>
 
                                         <!--====== Dropdown ======-->
 
@@ -296,14 +267,20 @@
                                     </li>
 
                                     <li>
-                                        <a asp-controller="Product" asp-action="ProductForUser">SẢN PHẨM</a>
+                                        <a asp-controller="Product" asp-action="ProductForUser">Sản Phẩm</a>
                                     </li>
-                                    @*  @if(User.IsInRole("ADMIN"))
+                                    <li>
+                                        <a asp-controller="Product" asp-action="ProductForUser">Liên Hệ</a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Product" asp-action="ProductForUser">Về Chúng Tôi</a>
+                                    </li>
+                                     @if(User.IsInRole("ADMIN"))
                                     {
                                         <li>
-                                            <a asp-controller="User" asp-action="Dashboard">Dashboard</a>
+                                            <a asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
                                         </li>
-                                    } *@
+                                    }
                                 </ul>
                                 <!--====== End - List ======-->
                             </div>
@@ -515,7 +492,6 @@
             </nav>
             <!--====== End - Nav 2 ======-->
         </header>
-        <!--====== End - Main Header ======-->
 
 
         <!--====== App Content ======-->

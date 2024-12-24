@@ -112,6 +112,7 @@ namespace ShelkovyPut_Main.Controllers.Management
 
             IEnumerable<Product> products = await _home.GetProducts(sterm, categoryId);
             IEnumerable<Category> categories = await _home.Categories();
+            IEnumerable<Category> categoriesForSearch = await _home.Categories();
 
             var relatedProducts = await _product.GetAllRelatedProducts(productResponse.Id, 5);
             var viewModel = new SEOProduct()
@@ -119,6 +120,7 @@ namespace ShelkovyPut_Main.Controllers.Management
                 Product = productResponse,
                 Products = products,                
                 RelatedProducts = relatedProducts,
+                CategoryForSearch = categoriesForSearch,
                 Categories = categories,
                 STerm = sterm,
                 CategoryId = categoryId

@@ -95,6 +95,9 @@ namespace Infrastructure.Repositories.Management
             var orders = await ordersQuery.ToListAsync();
             var user = orders.FirstOrDefault()?.User;
 
+            // Fetch all categories for search (or any other relevant categories)
+            var categories = await _context.Categories.ToListAsync(); // Assuming you have a Categories DbSet
+
             var profileVM = new ProfileVM()
             {
                 Id = user?.Id,
@@ -104,8 +107,6 @@ namespace Infrastructure.Repositories.Management
                 PhoneNumber = user?.PhoneNumber,
                 ImageUrl = user?.Image,
                 CreatedDate = user?.CreatedDate,
-                //Role = user?.Role,
-                //IsLockedOut = user?.IsLockedOut ?? false,
                 IsEmailConfirmed = user?.EmailConfirmed ?? false,
                 IsPhoneNumberConfirmed = user?.PhoneNumberConfirmed ?? false,
                 Orders = orders.Select(order => new MyOrderVM
@@ -124,11 +125,13 @@ namespace Infrastructure.Repositories.Management
                     TotalOrderPrice = order.OrderDetails.Sum(od => od.Product?.ProductPrice * od.Quantity ?? 0),
                     FullName = order.User.FullName,
                     Email = order.User.Email
-                }).ToList()
+                }).ToList(),
+                CategoryForSearch = categories
             };
 
             return profileVM;
         }
+
         public async Task<IEnumerable<MyOrderVM>> GetOrdersByFilter(string userId, string filter)
         {
             IQueryable<Order> ordersQuery = _context.Orders.Where(o => o.UserId == userId);
@@ -188,6 +191,8 @@ namespace Infrastructure.Repositories.Management
                 return null;
             }
 
+            var categories = await _context.Categories.ToListAsync();
+
             var profileVM = new ProfileVM
             {
                 Id = order.User?.Id,
@@ -223,7 +228,7 @@ namespace Infrastructure.Repositories.Management
                         TotalPrice = od.Product?.ProductPrice * od.Quantity ?? 0,
                         Pictures = od.Product?.Pictures
                     }).ToList()
-                }
+                }, CategoryForSearch = categories
             };
 
             return profileVM;

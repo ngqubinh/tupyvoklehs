@@ -1,4 +1,6 @@
-﻿namespace Application.ViewModels.User
+﻿using Domain.Models.Management;
+
+namespace Application.ViewModels.User
 {
     public class ProfileVM
     {
@@ -16,5 +18,6 @@
 
         public IEnumerable<MyOrderVM> Orders { get; set; }
         public UserOrderDetailVM? OrderDetail { get; set; }
+        public IEnumerable<Category>? CategoryForSearch { get; set; }
     }
 }

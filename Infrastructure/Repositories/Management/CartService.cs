@@ -85,6 +85,41 @@ namespace Infrastructure.Repositories.Management
             });
         }
 
+        public async Task AddMultipleItemsAsync(string userId, List<CartDetails> items)
+        {
+            var cart = await _context.ShoppingCarts
+                .Include(c => c.CartDetails)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (cart == null)
+            {
+                cart = new ShoppingCart { UserId = userId };
+                _context.ShoppingCarts.Add(cart);
+                await _context.SaveChangesAsync();
+            }
+
+            foreach (var item in items)
+            {
+                var cartItem = cart.CartDetails.FirstOrDefault(cd => cd.ProductId == item.ProductId);
+                if (cartItem != null)
+                {
+                    cartItem.Quantity += item.Quantity;
+                }
+                else
+                {
+                    cartItem = new CartDetails
+                    {
+                        ProductId = item.ProductId,
+                        ShoppingCartId = cart.Id,
+                        Quantity = item.Quantity,
+                    };
+                    _context.CartDetails.Add(cartItem);
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
+
 
         public async Task<bool> DoCheckout(CheckoutRequest model)
         {
@@ -143,14 +178,17 @@ namespace Infrastructure.Repositories.Management
                                 throw new InvalidOperationException("Product not found");
                             }
 
-                            var unitPrice = product.DiscountProductprice.HasValue ? product.DiscountProductprice.Value : product.ProductPrice;
+                            // Cập nhật câu điều kiện để đảm bảo UnitPrice luôn có giá trị
+                            var unitPrice = product.DiscountProductprice.HasValue && product.DiscountProductprice.Value > 0
+                                            ? product.DiscountProductprice.Value
+                                            : product.ProductPrice;
 
                             var orderDetail = new OrderDetails
                             {
                                 ProductId = item.ProductId,
                                 OrderId = order.Id,
                                 Quantity = item.Quantity,
-                                UnitPrice = unitPrice
+                                UnitPrice = unitPrice // Giá sản phẩm (có thể đã giảm)
                             };
                             _context.OrderDetails.Add(orderDetail);
 
@@ -165,6 +203,7 @@ namespace Infrastructure.Repositories.Management
                             }
                             stock.Quantity -= item.Quantity;
                         }
+
                         _context.CartDetails.RemoveRange(cartDetail);
                         await _context.SaveChangesAsync();
                         transaction.Commit();
@@ -178,6 +217,8 @@ namespace Infrastructure.Repositories.Management
                 }
             });
         }
+
+
 
         public async Task<int> GetCartItemCount(string userId = "")
         {
@@ -202,13 +243,42 @@ namespace Infrastructure.Repositories.Management
             var shoppingCart = await _context.ShoppingCarts.Include(a => a.CartDetails)
                 .ThenInclude(a => a.Product).ThenInclude(a => a.Stock)
                 .Include(a => a.CartDetails)
-                .ThenInclude(a => a.Product)
-                .ThenInclude(a => a.Category)
+                    .ThenInclude(a => a.Product)
+                    .ThenInclude(a => a.Category)
                 .Include(a => a.CartDetails)
                     .ThenInclude(a => a.Product)
                     .ThenInclude(p => p.Size)
                 .Where(a => a.UserId == userId).FirstOrDefaultAsync();
             return shoppingCart;
+        }
+
+        public async Task<bool> RemoveFromCart(int productId)
+        {
+            var userId = _http.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(userId == null)
+            {
+                return false;
+            }
+
+            var cart = await _context.ShoppingCarts
+                    .Include(c => c.CartDetails)
+                    .FirstOrDefaultAsync(c => c.UserId == userId);
+            if (cart == null)
+            {
+                return false;
+            }
+
+            var cartItem = cart.CartDetails.FirstOrDefault(cd => cd.ProductId == productId);
+            if (cartItem == null)
+            {
+                throw new Exception();
+            }
+
+            _context.CartDetails.Remove(cartItem);
+            await _context.SaveChangesAsync();
+
+            return true;
+
         }
 
         public async Task<int> RemoveItem(int productId)

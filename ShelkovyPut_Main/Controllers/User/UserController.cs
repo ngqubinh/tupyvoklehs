@@ -21,12 +21,14 @@ namespace ShelkovyPut_Main.Controllers.User
         private readonly ShelkobyPutDbContext _context;
         private readonly IOrderService _order;
         private readonly MongoDBContext _mongoContext;
-        public UserController(UserManager<Domain.Models.Auth.User> userManager, ShelkobyPutDbContext context, IOrderService order, MongoDBContext mongoContext)
+        private readonly IHomeService _home;
+        public UserController(UserManager<Domain.Models.Auth.User> userManager, ShelkobyPutDbContext context, IOrderService order, MongoDBContext mongoContext, IHomeService home)
         {
             _userManager = userManager;
             _context = context;
             _order = order;
             this._mongoContext = mongoContext;
+            this._home = home;
         }
 
         [HttpGet]
@@ -38,7 +40,9 @@ namespace ShelkovyPut_Main.Controllers.User
             {
                 return Redirect("https://localhost:7235/identity/account/login");
             }
-         
+
+            IEnumerable<Category> categoriesForSearch = await _home.Categories();
+
             var profileVM = new ProfileVM()
             {
                 Email = user.Email,
@@ -46,6 +50,7 @@ namespace ShelkovyPut_Main.Controllers.User
                 FullName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 CreatedDate = user.CreatedDate,
+                CategoryForSearch = categoriesForSearch
             };
             return View(profileVM);
         }
@@ -189,6 +194,8 @@ namespace ShelkovyPut_Main.Controllers.User
                 return Redirect("https://localhost:7235/identity/account/login");
             }
 
+            IEnumerable<Category> categoriesForSearch = await _home.Categories();
+
             var profileVM = new ProfileVM()
             {
                 Email = user.Email,
@@ -196,6 +203,7 @@ namespace ShelkovyPut_Main.Controllers.User
                 FullName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 CreatedDate = user.CreatedDate,
+                CategoryForSearch = categoriesForSearch
             };
             return View(profileVM);
         }

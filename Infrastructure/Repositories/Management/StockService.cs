@@ -29,6 +29,7 @@ namespace Infrastructure.Repositories.Management
                                 into product_stock
                                 from productStock in product_stock.DefaultIfEmpty()
                                 where string.IsNullOrWhiteSpace(sTerm) || product.ProductName!.ToLower().Contains(sTerm.ToLower())
+                                    
                                 select new StockResponse
                                 {
                                     ProductId = product.Id,
